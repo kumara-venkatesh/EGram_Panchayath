@@ -1,0 +1,123 @@
+{% extends 'Services\Base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+
+
+
+<div class="m-5">
+    
+    <div class="card shadow">
+        
+        <div class="card-header">
+            
+
+            <h4 class="">{{ object.Serv_Name }}</h4>
+            <img class="rounded-circle" src="{{ object.Serv_Applied_By.profile.profile_pic.url }}" width="70px" height="70px">
+            <label class="">Applied by "{{ object.Serv_Applied_By.first_name }} {{object.Serv_Applied_By.last_name}}", On {{ object.Serv_Applied_Date }}</label>
+            
+            
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-sm-6">
+
+                    <div class="rounded border shadow p-3">
+
+                        <div class="form-group">
+                            <div class="input-group-prepend">
+                                <span class="form-control"><b><u>Description </u></b> :{{ object.Serv_Description }}</span>
+                            </div>
+                        
+                        </div>
+                        
+                        
+                        <div class="form-group rounded border p-2">
+                            {% if object.Serv_Applied_By == user %}
+                                <h6><br><u>Document Proof:</u></h6>
+                                <b>Document Submitted</b> : {{ object.Serv_Doc_Name }}<br>
+                                <b>Document</b> : <a name="resurl" id="resurl" href="{{ object.Serv_Doc_Proof.url }} ">{{ object.Serv_Doc_Proof.url }}</a>
+                            {% endif %}
+                            <h6><br><u>Address:</u></h6>
+                            <b>State</b> : {{ object.Serv_State }}<br>
+                            <b>City</b> : {{ object.Serv_City }}<br>
+                            <b>Complete Location</b> : {{ object.Serv_Location }}<br>
+
+                        </div>
+                        <div class="col-sm-3 p-2 rounded " style="background-color: rgb(238, 235, 235);">
+                            <h6>Complaint Image</h6>
+                            <img class="rounded" src="{{ object.Serv_Req_Image.url }}" width="300px" height="300px">
+                            
+                        </div>
+
+                       
+                    </div>
+                    
+                </div>
+                
+
+                <div class="rounded form-group card" >
+                    <div class="card-header">
+                        <h5>PDO Action on this Request</h5>
+                    </div>
+                    
+                    <div class="card-body">
+                        {% if object.Serv_Approval_Status == 'pending' %}
+                            <div class=" mt-3 border p-3 rounded shadow">
+
+                            
+                                <h6>Please Accept/Reject the below request with the valid remarks</h6>
+                                <input class="form-control" type="text" placeholder="Remarks" required>
+                                <input type="image" class="btn" name="Submit" src="/media/Approve.PNG" width="100">
+                                <input type="image" class="btn" name="Submit" src="/media/Reject.PNG" width="100">
+                                
+                            </div>
+
+                            <div class=" mt-3 border p-3 rounded shadow">
+
+                            
+                                <h6>Service Updates:</h6>
+                                <div class="input-group form-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fas fa-file-alt mr-2"></i>Snapshot of Work Completed</span>
+                                    </div>
+                                    
+                                    <input type="file" onchange="check_file(this)" class="btn btn-light" id="CImage" accept=".jpg,.jpeg,.png" name="CImage" required>  
+                                    
+                                </div>
+                                
+                                <div class="p-2 text-muted">
+                                    <input class="form-control" type="text" placeholder="Remarks" required><br>
+            
+                                    <input type="submit" class="btn btn-primary"  name="Submit" value="Submit">
+                                </div>
+                                
+                                
+                            </div>
+                            {% endif %}
+                        
+                    </div>
+                    
+                </div>
+
+            </div>
+            
+            
+        </div>
+        <div class="card-footer">
+            {% if user.profile.Department == 'public' %}
+                {% if object.Serv_Applied_By == user and object.Serv_Approval_Status != 'approved' %}
+                    <a class="btn btn-outline-danger mr-4" href="#"><img src="/media/delete.png" width="30" height="30">Delete Request</a>
+                    <a class="btn btn-outline-secondary mr-4" href="#"><img src="/media/edit.png" width="30" height="30">Edit Request</a>
+
+                {% endif %}
+
+            {% endif %}
+
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock content %}

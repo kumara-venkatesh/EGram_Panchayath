@@ -1,0 +1,196 @@
+{% extends 'Services\Base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+
+
+<style>
+.pgval{
+    margin-top: -20px;
+}
+
+.statusval{
+    border: 1px solid;
+    background-color: white;
+    border-radius: 5px;
+    padding: 8px;
+    
+}
+  
+.text {
+    color: #2F8D46;
+    font-weight: normal
+}
+  
+#progressbar .active1 {
+    color: #2F8D46
+}
+  
+#progressbar li {
+    list-style-type: none;
+    color: lightgray;
+    font-size: 15px;
+    width: 25%;
+    float: left;
+    position: relative;
+    font-weight: 400;
+}
+  
+  
+#progressbar li.active1:before,
+#progressbar li.active1:after {
+    background: #2F8D46
+}
+  
+
+</style>
+
+
+<div class="m-5">
+    
+    <div class="card shadow">
+        
+        <div class="card-header">
+            <div class="row justify-content-center ">
+                <div class="col-12 text-center">
+                    <div class="">
+                       
+                            <ul id="progressbar">
+                                {% if object.Serv_Approval_Status == 'pending' %}
+                                    <li class="active1" id="step1">
+                                        <strong class="statusval">Applied</strong>
+                                    </li>
+                                    <li class="" id="step2"><strong class="statusval">Approved</strong></li>
+                                    <li class="" id="step3"><strong class="statusval">Processing</strong></li>
+                                    <li class="" id="step4"><strong class="statusval">Completed</strong></li>
+                                {% elif object.Serv_Approval_Status == 'approved' and object.Serv_Completion_Status != 'completed' %}
+                                    <li class="active1" id="step1">
+                                        <strong class="statusval">Applied</strong>
+                                    </li>
+                                    <li class="active1" id="step2"><strong class="statusval">Approved</strong></li>
+                                    <li class="active1" id="step3"><strong class="statusval">Processing</strong></li>
+                                    <li class="" id="step4"><strong class="statusval">Completed</strong></li>
+                                {% elif object.Serv_Approval_Status == 'rejected' %}
+                                    <li class="active1" id="step1">
+                                        <strong class="statusval">Applied</strong>
+                                    </li>
+                                    <li class="" id="step2"><strong class="statusval text-danger">Rejected</strong></li>
+                                    <li class="" id="step3"><strong class="statusval">Processing</strong></li>
+                                    <li class="" id="step4"><strong class="statusval">Completed</strong></li>
+
+                                {% elif object.Serv_Completion_Status == 'completed' %}
+                                    <li class="active1" id="step1">
+                                        <strong class="statusval">Applied</strong>
+                                    </li>
+                                    <li class="active1" id="step2"><strong class="statusval">Approved</strong></li>
+                                    <li class="active1" id="step3"><strong class="statusval">Processing</strong></li>
+                                    <li class="active1" id="step4"><strong class="statusval">Completed</strong></li>
+
+                                {% endif %}
+                            </ul>
+                         
+                    </div>
+                </div>
+            </div>
+            {% if object.Serv_Approval_Status == 'pending' %}
+                <div class="pgval progress mb-3">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: 20%;"></div>
+                </div>
+            {% elif object.Serv_Approval_Status == 'approved' and object.Serv_Completion_Status != 'completed'  %}
+                <div class="pgval progress mb-3">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: 70%;"></div>
+                </div>
+            {% elif object.Serv_Approval_Status == 'rejected' %}
+                <div class="pgval progress mb-3">
+                    <div class="progress-bar progress-bar-striped bg-danger" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: 40%;"></div>
+                </div>
+            {% elif object.Serv_Completion_Status == 'completed' %}
+                <div class="pgval progress mb-3">
+                    <div class="progress-bar progress-bar-striped bg-success" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: 100%;"></div>
+                </div>
+            {% endif %}
+
+            <h4 class="">{{ object.Serv_Name }}</h4>
+            <img class="rounded-circle" src="{{ object.Serv_Applied_By.profile.profile_pic.url }}" width="70px" height="70px"><br>
+            <label class="text-muted">Applied by {{ object.Serv_Applied_By.first_name }} {{object.Serv_Applied_By.last_name}}, On {{ object.Serv_Applied_Date }}</label>
+            
+            
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-sm-6">
+
+                    <div class="rounded border shadow p-3">
+
+                        <div class="form-group">
+                            <div class="input-group-prepend">
+                                <span class="form-control"><b><u>Description </u></b> :{{ object.Serv_Description }}</span>
+                            </div>
+                        
+                        </div>
+                        
+                        
+                        <div class="form-group rounded border p-2">
+                            {% if object.Serv_Applied_By == user %}
+                                <h6><br><u>Document Proof:</u></h6>
+                                <b>Document Submitted</b> : {{ object.Serv_Doc_Name }}<br>
+                                <b>Document</b> : <a name="resurl" id="resurl" href="{{ object.Serv_Doc_Proof.url }} ">{{ object.Serv_Doc_Proof.url }}</a>
+                            {% endif %}
+                            <h6><br><u>Address:</u></h6>
+                            <b>State</b> : {{ object.Serv_State }}<br>
+                            <b>City</b> : {{ object.Serv_City }}<br>
+                            <b>Complete Location</b> : {{ object.Serv_Location }}<br>
+
+                        </div>
+
+                        <div class="rounded border p-2">
+                            <h6><u>PDO Updates:</u></h6>
+                            <p>
+                                <b>Approval Status</b> : <label class="text-warning">{{ object.Serv_Approval_Status }}</label><br>
+                                <b>Completion Status</b> : {{ object.Serv_Completion_Status }}<br>
+                                <b>Estimated Completion Date</b> : {{ object.Serv_Estimated_Completion_Date }}<br>
+                                <b>Remarks</b> : {{ object.Serv_Remarks }}<br>
+                            </p>
+    
+                        </div>
+                    </div>
+                    
+                </div>
+                <div class="col-sm-3 p-2 rounded " style="background-color: rgb(238, 235, 235);">
+                    <h6>Complaint Image</h6>
+                    <img class="rounded" src="{{ object.Serv_Req_Image.url }}" width="300px" height="300px">
+                    
+                </div>
+
+                <div class="col-sm-3 p-3 rounded " style="background-color: rgb(238, 235, 235);">
+                    <h6>Service Completion Image</h6>
+                    {% if object.Serv_Comp_Image %}
+                        <img class="rounded" src="{{ object.Serv_Comp_Image.url }}" width="300px" height="300px">
+                    {% endif %}
+                </div>
+
+            </div>
+            
+            
+
+            
+
+            
+        </div>
+        <div class="card-footer">
+            {% if user.profile.Department == 'public' %}
+                {% if object.Serv_Applied_By == user and object.Serv_Approval_Status != 'approved' %}
+                    <a class="btn btn-outline-danger mr-4" href="#"><img src="/media/delete.png" width="30" height="30">Delete Request</a>
+                    <a class="btn btn-outline-secondary mr-4" href="#"><img src="/media/edit.png" width="30" height="30">Edit Request</a>
+
+                {% endif %}
+
+            {% endif %}
+
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock content %}

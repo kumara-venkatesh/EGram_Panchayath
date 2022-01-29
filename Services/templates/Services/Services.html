@@ -1,0 +1,233 @@
+{% extends 'Services\Base.html' %}
+{% block content %}
+
+
+
+<script type="text/javascript">
+	function check_file()
+	{
+		var size = document.getElementById('file').files[0].size;
+		var doc = document.getElementById('file')
+		var ext = doc.value.split('.').pop();
+
+		if($.inArray(ext, ["doc","pdf",'docx']) == -1)
+		{
+			alert("Only PDF and Docs files are allowed");
+			doc.value = "";
+		}
+
+		else if(size > 2097152)
+		{
+			alert("Uploaded file size is more than 2MB, kindly upload the file lesser than 2MB");
+			doc.value = "";
+		}
+		
+	}
+
+</script>
+
+
+
+<script type="text/javascript">
+  function SetDoc()
+  {
+    document.getElementById('Location').disabled = false;
+    var reqName = document.getElementById('ReqName').value;
+    var doc = document.getElementById('DocName');
+    doc.innerHTML = "";
+    option = document.createElement("option");
+    option.text = "";
+    option.disabled = true;
+    option.selected = true;
+    doc.appendChild(option);
+
+    function CreateOptions()
+    {
+      option = document.createElement("option");
+      option.text = "Home Aggrement";
+      doc.appendChild(option);
+      option = document.createElement("option");
+      option.text = "Property Ownership letter";
+      doc.appendChild(option);
+      option = document.createElement("option");
+      option.text = "Adhar Card";
+      doc.appendChild(option);
+      
+    }
+    
+    if (reqName == "Water Supply Request")
+    {
+      CreateOptions()
+      option = document.createElement("option");
+      option.text = "Electricity Bill (Recent)";
+      doc.appendChild(option);
+      option = document.createElement("option");
+      option.text = "Gas Bill (Recent)";
+      doc.appendChild(option);
+      option = document.createElement("option");
+      option.text = "Telephone Bill (Recent)";
+      doc.appendChild(option);
+      
+    
+    }
+    
+    if (reqName == "Electricity Supply Request")
+    {
+      CreateOptions()
+      option = document.createElement("option");
+      option.text = "Water Bill (Recent)";
+      doc.appendChild(option);
+      option = document.createElement("option");
+      option.text = "Gas Bill (Recent)";
+      doc.appendChild(option);
+      option = document.createElement("option");
+      option.text = "Telephone Bill (Recent)";
+      doc.appendChild(option);
+      
+
+    }
+
+    if (reqName == "New Gas Connection")
+    {
+      CreateOptions()
+      option = document.createElement("option");
+      option.text = "Electricity Bill (Recent)";
+      doc.appendChild(option);
+      option = document.createElement("option");
+      option.text = "Water Bill (Recent)";
+      doc.appendChild(option);
+      option = document.createElement("option");
+      option.text = "Telephone Bill (Recent)";
+      doc.appendChild(option);
+
+      
+    }
+
+    if (reqName == "New Library Request" || reqName == "Street light Request")
+    {
+
+      var loc = document.getElementById('Location')
+      loc.value = "";
+      loc.disabled = true;
+      
+      option = document.createElement("option");
+      option.text = "Adhar Card";
+      doc.appendChild(option);
+      option = document.createElement("option");
+      option.text = "Voter ID";
+      doc.appendChild(option);
+      
+    }
+
+  }
+
+</script>
+
+
+
+<div class="container col-md-6 mb-5">
+
+{% if user.profile.Department == 'public' %}
+<form method="POST" data-toggle="validator" role="form" enctype="multipart/form-data">
+  {% csrf_token %}
+<div class="card mt-5">
+    <div class="card-header mb-2" style="border:solid 2.5px; border-top: hidden; border-left: hidden; border-right: hidden; border-bottom-color: #17a2b8">
+        <div class="d-flex flex-row" style="margin-bottom: -1.8vmin">
+
+            <div class=""> 
+                <a class="bg-info nav-link text-white font-weight-bold" href="{% url 'ServiceReq' %}">Service Request</a>
+            </div>
+            <div class="">
+                <a class="active bg-light nav-link text-info" href="{% url 'ComplaintReq' %}">Complaint Request</a>
+            </div>
+        </div>  
+    </div>
+  <div class="card-body">
+
+       
+    <div class="input-group form-group w-75">
+        <div class="input-group-prepend">
+            <span class="input-group-text">Requesting For</span>
+        </div>
+        <select class="form-control" onchange="SetDoc()" name="ReqName" id="ReqName" required>
+            <option disabled selected></option>
+            <option>Water Supply Request</option>
+            <option>Electricity Supply Request</option>
+            <option>New Gas Connection</option>
+            <option>New Library Request</option>
+            <option>Street light Request</option>
+        </select>
+    </div>
+
+    <div class="form-group input-group ">
+      <div class="input-group-prepend">
+        <span class="input-group-text">Document Required</span>
+      </div>
+      
+      <select class="form-control" id="DocName" name="DocName" required>
+          <option disabled selected>Please Select Requesting For</option>
+      </select>
+    </div>
+   
+
+    <div class="input-group form-group">
+        <div class="input-group-prepend">
+            <span class="input-group-text"><i class="fas fa-file-alt mr-2"></i>Upload document</span>
+        </div>
+
+            <input type="file" onchange="check_file()" class="btn btn-light" id="file" accept=".doc,.docx,.pdf" name="file" required>
+    </div>
+
+    <div class="form-group input-group ">
+      <div class="input-group-prepend">
+        <span class="input-group-text">Location</span>
+      </div>
+      
+      <select onchange="print_city('state', this.selectedIndex);" id="sts" name ="state_name" class="form-control" required></select>
+      <select id ="state" name="city_name" class="form-control" required></select>
+      <script language="javascript">print_state("sts");</script>
+  </div>
+
+   
+
+    <div class="form-group input-group">
+        <div class="input-group-prepend">
+          <span class="input-group-text">Complete Address</span>
+        </div>
+        
+        <textarea type="text" class="form-control" style="height: 80px;" minlength="20" placeholder="Enter Address" id="Location" name="Location" required /></textarea>
+    </div>
+
+    <div class="input-group form-group">
+      <div class="input-group-prepend">
+          <span class="input-group-text">Request Description</i></span>
+      </div>
+      
+      <textarea type="text" class="form-control" style="height: 80px;" minlength="20" placeholder="Reason for the request" id="ReqDesc" name="ReqDesc" required /></textarea>
+  </div>
+
+   
+
+</div>
+	 
+  <div class="card-footer text-muted">
+    <input type="submit" class="btn btn-primary"  name="Submit">
+
+  </div>
+
+</div>
+</form>
+
+{% else %}
+<div class="card">
+  <div class="card-body">
+<h5 class="text-danger">You don't have acces to this page</h5></div>
+</div>
+{% endif %}
+
+</div>
+
+
+
+
+{% endblock content %}

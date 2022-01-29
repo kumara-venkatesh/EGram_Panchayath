@@ -1,0 +1,205 @@
+{% extends 'Services\Base.html' %}
+{% block content %}
+
+<script type="text/javascript">
+	function check()
+	{
+		var size = document.getElementById('doc_proof').files[0].size;
+		var doc = document.getElementById('doc_proof')
+		var ext = doc.value.split('.').pop();
+
+		if($.inArray(ext, ["doc","pdf",'docx']) == -1)
+		{
+			alert("Only PDF and Docs files are allowed");
+			doc.value = "";
+		}
+
+		else if(size > 2097152)
+		{
+			alert("Uploaded file size is more than 2MB, kindly upload the file lesser than 2MB");
+			doc.value = "";
+		}
+		
+	}
+
+</script>
+
+
+<script type="text/javascript">
+	function check_file(input)
+	{
+
+		var size = document.getElementById('CImage').files[0].size;
+		var doc = document.getElementById('CImage')
+		var ext = doc.value.split('.').pop();
+    var reader = new FileReader();
+
+		if($.inArray(ext, ["jpg","jpeg",'png']) == -1)
+		{
+      $('#Preview').attr('src', "").width(0).height(0);
+			alert("Only JPG,JPEG and PNG files are allowed");
+			doc.value = "";
+      
+		}
+
+		else if(size > 2097152)
+		{
+			$('#Preview').attr('src', "").width(0).height(0);
+      alert("Uploaded file size is more than 2MB, kindly upload the file lesser than 2MB");
+			doc.value = "";
+      
+		}
+    
+      if (input.files && input.files[0]) {
+          var reader = new FileReader();
+
+          reader.onload = function (e) {
+            $('#Preview').attr('src', e.target.result).width(150).height(150);
+    };
+
+    reader.readAsDataURL(input.files[0]);
+    }
+
+		
+	}
+
+</script>
+
+
+
+<script type="text/javascript">
+
+</script>
+
+
+
+<div class="container col-md-6 mb-5">
+
+{% if user.profile.Department == 'public' %}
+<form method="POST" data-toggle="validator" role="form" enctype="multipart/form-data">
+  {% csrf_token %}
+<div class="card mt-5">
+    <div class="card-header mb-2" style="border:solid 2.5px; border-top: hidden; border-left: hidden; border-right: hidden; border-bottom-color: #17a2b8">
+        <div class="d-flex flex-row" style="margin-bottom: -1.8vmin">
+
+            <div class=""> 
+                <a class="active bg-light nav-link text-info" href="{% url 'ServiceReq' %}">Service Request</a>
+            </div>
+            <div class="">
+                <a class="bg-info nav-link text-white font-weight-bold" href="{% url 'ComplaintReq' %}">Complaint Request</a>
+            </div>
+        </div>  
+    </div>
+  <div class="card-body">
+
+       
+    <div class="input-group form-group w-75">
+        <div class="input-group-prepend">
+            <span class="input-group-text">Complaint On</span>
+        </div>
+        <select class="form-control" name="ReqName" id="ReqName" required>
+            <option disabled selected></option>
+            <option>Street Electricity</option>
+            <option>Water Issue</option>
+            <option>Home Electricity Problem</option>
+            <option>Damaged Roads</option>
+            <option>Others</option>
+        </select>
+    </div>
+
+    <div class="form-group input-group ">
+      <div class="input-group-prepend">
+        <span class="input-group-text">Document Required</span>
+      </div>
+      
+      <select class="form-control" id="DocName" name="DocName" required>
+          <option disabled selected></option>
+          <option>Adhar Card</option>
+          <option>Voyer ID Card</option>
+      </select>
+    </div>
+   
+    <div class="input-group form-group">
+      <div class="input-group-prepend">
+          <span class="input-group-text"><i class="fas fa-file-alt mr-2"></i>Upload document</span>
+      </div>
+
+          <input type="file" onchange="check()" class="btn btn-light" id="doc_proof" accept=".doc,.docx,.pdf" name="doc_proof" required>
+    </div>
+    
+    
+
+    <div class="form-group input-group ">
+      <div class="input-group-prepend">
+        <span class="input-group-text">Location</span>
+      </div>
+      
+      <select onchange="print_city('state', this.selectedIndex);" id="sts" name ="state_name" class="form-control" required></select>
+      <select id ="state" name="city_name" class="form-control" required></select>
+      <script language="javascript">print_state("sts");</script>
+  </div>
+
+   
+
+    <div class="form-group input-group">
+        <div class="input-group-prepend">
+          <span class="input-group-text">Complete Address</span>
+        </div>
+        
+        <textarea type="text" class="form-control" style="height: 80px;" minlength="20" placeholder="Enter Address" id="Location" name="Location" required /></textarea>
+    </div>
+
+    <div class="input-group form-group">
+      <div class="input-group-prepend">
+          <span class="input-group-text">Request Description</i></span>
+      </div>
+      
+      <textarea type="text" class="form-control" style="height: 80px;" minlength="20" placeholder="Problem Description" id="ReqDesc" name="ReqDesc" required /></textarea>
+  </div>
+
+  <div class="input-group form-group">
+    <div class="input-group-prepend">
+        <span class="input-group-text"><i class="fas fa-file-alt mr-2"></i>Snapshot of the problem</span>
+    </div>
+    
+      <input type="file" onchange="check_file(this)" class="btn btn-light" id="CImage" accept=".jpg,.jpeg,.png" name="CImage" required>  
+      
+  </div>
+ 
+   
+
+</div>
+	 
+  <div class="card-footer text-muted">
+    <div class="row">
+      <div class="col">
+        <img id="Preview" src="#" class="img-fluid img-thumbnail " alt="" />
+        <figcaption class="figure-caption">Image Preview</figcaption>
+      </div>
+      <div class="col">
+        <input type="submit" class="btn btn-primary float-right"  name="Submit" value="Raise Complaint">
+      </div>
+
+    </div>
+    
+  
+    
+
+  </div>
+
+</div>
+</form>
+
+{% else %}
+<div class="card">
+  <div class="card-body">
+<h5 class="text-danger">You don't have acces to this page</h5></div>
+</div>
+{% endif %}
+
+</div>
+
+
+
+
+{% endblock content %}

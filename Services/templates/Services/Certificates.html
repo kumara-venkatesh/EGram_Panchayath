@@ -1,0 +1,237 @@
+{% extends 'Services\Base.html' %}
+{% block content %}
+
+<script type="text/javascript">
+	function check()
+	{
+		var size = document.getElementById('doc_proof').files[0].size;
+		var doc = document.getElementById('doc_proof')
+		var ext = doc.value.split('.').pop();
+
+		if($.inArray(ext, ["doc","pdf",'docx']) == -1)
+		{
+			alert("Only PDF and Docs files are allowed");
+			doc.value = "";
+		}
+
+		else if(size > 2097152)
+		{
+			alert("Uploaded file size is more than 2MB, kindly upload the file lesser than 2MB");
+			doc.value = "";
+		}
+		
+	}
+
+</script>
+
+
+<script type="text/javascript">
+	$("#txtfuturedate").datepicker({
+    maxDate: 0
+});
+
+</script>
+
+<script>
+    
+  function SetDoc()
+  {
+    $("#xxx").hide();
+    var reqName = document.getElementById('ReqName').value;
+    var doc = document.getElementById('DocName');
+    doc.innerHTML = "";
+    option = document.createElement("option");
+    option.text = "";
+    option.disabled = true;
+    option.selected = true;
+    doc.appendChild(option);
+
+    if (reqName == "Income Certificate")
+    {
+      option = document.createElement("option");
+      option.text = "Salary Slip";
+      doc.appendChild(option);
+      option = document.createElement("option");
+      option.text = "Income Proof govt athested";
+      doc.appendChild(option);
+      
+    }
+    if (reqName == "Cast Certificate")
+    {
+      option = document.createElement("option");
+      option.text = "S.S.L.C Marksheet";
+      doc.appendChild(option);
+      option = document.createElement("option");
+      option.text = "Transfer Certificate (School/Colleg)";
+      doc.appendChild(option);
+
+    }
+    if (reqName == "Birth Certificate")
+    {
+      option = document.createElement("option");
+      option.text = "Hospital Birth Receipt";
+      doc.appendChild(option);
+      option = document.createElement("option");
+      option.text = "S.S.L.C Marksheet";
+      doc.appendChild(option);
+      option = document.createElement("option");
+      option.text = "Adhar card";
+      doc.appendChild(option);
+
+    }
+    if (reqName == "Death Certificate")
+    {
+      $("#xxx").show();
+      option = document.createElement("option");
+      option.text = "Hospital Death Summary";
+      doc.appendChild(option);
+      option = document.createElement("option");
+      option.text = "Crematorium Receipt";
+      doc.appendChild(option);
+
+    }
+}
+</script>
+
+
+
+<script type="text/javascript">
+
+</script>
+
+
+
+<div class="container col-md-6 mb-5">
+
+{% if user.profile.Department == 'public' %}
+<form method="POST" data-toggle="validator" role="form" enctype="multipart/form-data">
+  {% csrf_token %}
+<div class="card mt-5">
+    <div class="card-header mb-2" style="border:solid 2.5px; border-top: hidden; border-left: hidden; border-right: hidden; border-bottom-color: #17a2b8">
+        <div>
+            <div class="bg-info nav-link text-white font-weight-bold">
+                Certificate Request
+            </div>
+        </div>  
+    </div>
+  <div class="card-body">
+
+       
+    <div class="input-group form-group w-75">
+        <div class="input-group-prepend">
+            <span class="input-group-text">Apply Certificate for</span>
+        </div>
+        <select class="form-control" name="ReqName" id="ReqName" onchange="SetDoc()" required>
+            <option disabled selected></option>
+            <option>Income Certificate</option>
+            <option>Cast Certificate</option>
+            <option>Birth Certificate</option>
+            <option>Death Certificate</option>
+            
+        </select>
+    </div>
+    <div class="input-group form-group">
+        <div class="input-group-prepend">
+            <span class="input-group-text"><i class="fas fa-user-alt"></i></span>
+        </div>
+        
+            <input type="text" class="form-control" name="fname" minlength="5" maxlength="20" placeholder="First Name" required>
+            <input type="text" class="form-control" name="lname" minlength="1" maxlength="20" placeholder="Last Name" required>
+    </div>
+
+    <div class="input-group form-group">
+        <div class="input-group-prepend">
+            <span class="input-group-text"><i class="fas fa-phone"></i></span>
+        </div>
+        
+        <input type="tel" class="form-control" name="cnumber" minlength="10" maxlength="10" placeholder="Contact Number (10-digits)" pattern="[0-9]{10}" title="Must contain 10 digits, Only digits are allowed" required>
+    </div>
+
+    <div class="input-group form-group">
+        <div class="input-group-prepend">
+            <span class="input-group-text"><i class="fas fa-calendar-alt mr-2"></i> Date of Birth</span>
+        </div>
+        
+        <input type="date" class="form-control" id="birthday" name="birthday" required >
+        <script type="text/javascript">
+            birthday.max= new Date().toISOString().split("T")[0];
+        </script> 	
+
+    </div>
+
+    <div class="form-group input-group ">
+      <div class="input-group-prepend">
+        <span class="input-group-text">Location</span>
+      </div>
+      
+      <select onchange="print_city('state', this.selectedIndex);" id="sts" name ="state_name" class="form-control" required></select>
+      <select id ="state" name="city_name" class="form-control" required></select>
+      <script language="javascript">print_state("sts");</script>
+  </div>
+
+   
+
+    <div class="form-group input-group">
+        <div class="input-group-prepend">
+          <span class="input-group-text">Complete Address</span>
+        </div>
+        
+        <textarea type="text" class="form-control" style="height: 80px;" minlength="20" placeholder="Enter Address" id="Location" name="Location" required /></textarea>
+    </div>
+
+    <div id="xxx" style="display: none" class="input-group form-group">
+        <div class="input-group-prepend">
+            <span class="input-group-text"><i class="fas fa-calendar-alt mr-2"></i> Date of Death</span>
+        </div>
+        
+        <input type="date" class="form-control" id="deathday" name="deathday" required>	
+        <script type="text/javascript">
+            deathday.max= new Date().toISOString().split("T")[0];
+        </script> 
+
+    </div>
+
+    <div class="form-group input-group ">
+        <div class="input-group-prepend">
+          <span class="input-group-text">Document Required</span>
+        </div>
+        
+        <select class="form-control" id="DocName" name="DocName" required>
+            <option disabled selected></option>
+        </select>
+      </div>
+     
+      <div class="input-group form-group">
+        <div class="input-group-prepend">
+            <span class="input-group-text"><i class="fas fa-file-alt mr-2"></i>Upload document</span>
+        </div>
+  
+            <input type="file" onchange="check()" class="btn btn-light" id="doc_proof" accept=".doc,.docx,.pdf" name="doc_proof" required>
+      </div>
+
+ 
+   
+
+</div>
+	 
+  <div class="card-footer text-muted">
+    
+        <input type="submit" class="btn btn-primary float-right"  name="Submit" value="Apply Now">
+  </div>
+
+</div>
+</form>
+
+{% else %}
+<div class="card">
+  <div class="card-body">
+<h5 class="text-danger">You don't have acces to this page</h5></div>
+</div>
+{% endif %}
+
+</div>
+
+
+
+
+{% endblock content %}

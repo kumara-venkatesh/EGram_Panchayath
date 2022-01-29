@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>E-Gram Panchayath</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+     <script src="https://cdn.ckeditor.com/ckeditor5/18.0.0/decoupled-document/ckeditor.js"></script>
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/5.4.0/bootbox.min.js"></script>
+     <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.4.0/moment.min.js"></script>
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+</head>
+
+<script type="text/javascript">
+  $(window).on("load",function(){
+    $(".load-wrapper").fadeOut("medium");
+  })
+
+</script>
+
+{% load static %}   
+<script src="{% static '/js/cities.js' %}" type="text/javascript"></script>
+
+<style>
+  .footer_icons{
+    margin: 40px;
+    text-decoration: none;
+    color: rgb(112, 89, 89);
+    
+  }
+  .notification {
+
+  position: relative;
+  display: inline-block;
+  
+}
+
+.notification .badge {
+  position: absolute;
+  top: -5px;
+  right: -10px;
+  padding: 5px 10px;
+  border-radius: 50%;
+  background: red;
+  color: white;
+}
+</style>
+
+<style type="text/css">
+
+  .active,.navhead:hover{
+
+    border:1px solid #17a2b8;
+    font-weight:bold;
+    font-size: 14.8px;
+  }
+  .load-wrapper{
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background: #fff url("/media/loading.gif") no-repeat center;
+    z-index: 9999;
+  }
+
+  .dropdown-submenu {
+    position: relative;
+  }
+  .dropdown-submenu .dropdown-menu {
+    top: 0;
+    left: 100%;
+    margin-top: -1px;
+  }
+
+
+</style>
+
+<script>
+  $(document).ready(function(){
+    $('.dropdown-submenu a.test').on("click", function(e){
+      $(this).next('ul').toggle();
+      e.stopPropagation();
+      e.preventDefault();
+    });
+  });
+  </script>
+</head>
+<body onload="loadfunction()" background="/media/Background_New.jpg">
+
+  <div class="load-wrapper" id="load-wrapper"></div>
+
+	<nav class="navbar navbar-expand-lg navbar-light bg-light shadow ">
+        <a class="active navhead p-1 navbar-brand rounded text-info" href="{% url 'Home' %}">E-GRAM PANCHAYATH</a>
+	    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+	            <span class="navbar-toggler-icon"></span>
+	    </button>
+        <div id="navbarNavDropdown" class="navbar-collapse collapse" >
+            <ul class="navbar-nav mr-auto">
+
+            </ul>
+            <ul class="navbar-nav">
+              <li class="nav-item">
+                      <a class="navhead bg-light rounded nav-link text-info" href="{% url 'Home' %}">Home</a>
+                  </li>
+
+                  {% if user.is_authenticated %}
+                    {% if user.profile.Department != 'public' %}
+                      <li class="nav-item notification">
+                        <a class="navhead bg-light rounded nav-link text-info" href="{% url 'ReqReceived' %}">Requests</a>
+                        <span class="badge">3</span>
+                      </li>
+                      <li class="nav-item">
+                      <a class="navhead bg-light rounded nav-link text-info ml-3" href="{% url 'profile' %}">{{ user.first_name }} {{ user.last_name }}-(Profile)</a>
+                    </li>
+
+
+                    {% elif user.profile.Department == 'public' %}
+
+
+                      <li class="nav-item dropdown">
+                        <a class="navhead bg-light rounded nav-link text-info dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                          Requests
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+
+                          <div class="dropdown-submenu dropright" >
+                            <a class="test navhead bg-light nav-link text-info dropdown-toggle" href="#" >Services</a>
+                            <ul class="dropdown-menu">
+                              <a class="navhead bg-light nav-link text-info" href="{% url 'ServiceReq' %}">Service Request</a>
+                              <a class="navhead bg-light nav-link text-info" href="{% url 'ComplaintReq' %}">Raise Complaint</a>
+                            </ul>
+                              
+                          </div>
+                          <a class="navhead bg-light nav-link text-info" href="{% url 'CertificateReq' %}">Certificate Request</a>
+                          <a class="navhead bg-light nav-link text-info" href="{% url 'MyRequests' %}">My Requests</a>
+                          
+                        </div>   
+                      </li>
+                      
+
+                    
+                      <li class="nav-item">
+                        <a class="navhead bg-light rounded nav-link text-info" href="{% url 'profile' %}">{{ user.first_name }} {{ user.last_name }}-(Profile)</a>
+                      </li>
+                      
+
+
+
+                    {% endif %}
+
+                    <a class="navhead bg-light rounded nav-link text-info" href="{% url 'Logout' %}">Logout</a>
+                  {% else %}
+                  <li class="nav-item">
+                    <a class="navhead bg-light rounded nav-link text-info" href="{% url 'Register' %}">Register</a>
+                    
+                </li>
+                  <li class="nav-item">
+                      <a class="navhead bg-light rounded nav-link text-info" href="{% url 'Login' %}" >Login</a>
+                  </li>
+
+                  {% endif %}
+                  <li class="nav-item">
+                      <a class="navhead bg-light rounded nav-link text-info" href="{% url 'AboutUs' %}">About Us</a>
+                  </li>
+                  <li class="nav-item">
+                      <a  href="{% url 'admin:index' %}" >
+                       <img src="/media/adminimg.png" style="width:42px;height:42px;border:0;">
+                      </a>
+                  </li>
+    			</ul>
+
+    	</div>
+	</nav>
+		      {% if messages %}
+
+            {% for message in messages %}
+              <div class="mt-3 container w-50 alert alert-{{ message.tags }}">
+                {{ message }}
+              </div>
+            {% endfor %}
+          {% endif %}
+
+          {% block content %}
+          {% endblock %}
+
+  
+
+</body>
+
+
+<footer class="page-footer bg-light py-2 font-small cyan darken-3 text-white" style="margin-top: 200px;">
+
+  <!-- Footer Elements -->
+  <div class="container">
+
+    <!-- Grid row-->
+    <div class="row">
+
+      <!-- Grid column -->
+      
+        <div class="mt-2" style="align-content: center; margin-left: 260px;">
+
+          <!-- Facebook -->
+          <a class="footer_icons" target="_blank" href ="https://www.facebook.com/Meta/"><i class="fab fa-facebook-f fa-lg"></i></a>
+          <!-- Twitter -->
+          <a class="footer_icons" target="_blank" href ="https://mobile.twitter.com/explore"><i class="fab fa-twitter fa-lg "></i></a>
+          <!--Linkedin -->
+          <a class="footer_icons" target="_blank" href ="https://in.linkedin.com/"><i class="fab fa-linkedin-in fa-lg "></i></a>
+          <!--Instagram-->
+          <a class="footer_icons" target="_blank" href ="https://www.instagram.com/instagram/?hl=en"><i class="fab fa-instagram fa-lg "></i></a>
+          <!--Pinterest-->
+          <a class="footer_icons" target="_blank" href ="https://www.youtube.com/" ><i class="fab fa-youtube fa-lg white-text "> </i></a>
+        </div>
+      
+      <!-- Grid column -->
+
+    </div>
+    <!-- Grid row-->
+
+  </div>
+  <!-- Footer Elements -->
+
+  <!-- Copyright -->
+  <div class="footer-copyright text-dark text-center py-2" style="width: 100%;">
+    © 2022 Copyright Travel India
+  </div>
+  <!-- Copyright -->
+
+</footer>
+
+</html>

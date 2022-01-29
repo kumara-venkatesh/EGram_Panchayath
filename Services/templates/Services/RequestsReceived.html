@@ -1,0 +1,143 @@
+{% extends 'Services\Base.html' %}
+{% block content %}
+
+
+
+<div class="p-5">
+    <form method="get" action="#">
+
+    
+    <table class="rounded table table-hover table-bordered table-striped table-light">
+       
+        <thead class="bg-info text-white">
+            <tr>
+                <th scope="col">
+
+                    <div class="dropdown">
+                        
+                        <button class="btn btn-info border dropdown-toggle" data-toggle="dropdown">
+                          Request Type <i class="fas fa-filter ml-2"></i>
+                        </button>
+                        <div class="dropdown-menu">  
+                            <button type="submit" name="idServType" id="idServType" value="Service" class="dropdown-item">Service</button>
+                            <button type="submit" name="idServType" id="idServType" value="Complaint" class="dropdown-item">Complaint</button>
+                            <button type="submit" name="idServType" id="idServType" value="Certificate" class="dropdown-item">Certificate</button>
+                            <button type="submit" name="idServType" id="idServType" value="" class="dropdown-item">All</button>
+                        </div>
+                      </div>
+
+                </th>
+                <th scope="col">Applied By</th>
+                <th scope="col">Applied for</th>
+                <th scope="col">Applied Date</th>
+                <th scope="col">
+                    <div class="dropdown">
+                        <button class="btn btn-info border dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                          Approval Status <i class="fas fa-filter ml-2"></i>
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <button type="submit" name="idAppStatus" value="pending" class="dropdown-item">Pending</button>
+                            <button type="submit" name="idAppStatus" value="approved" class="dropdown-item">Approved</button>
+                            <button type="submit" name="idAppStatus" value="rejected" class="dropdown-item">Rejected</button>
+                            <button type="submit" name="idAppStatus" value="" class="dropdown-item">All</button>
+                        </div>
+                      </div>
+                </th>
+                <th scope="col">
+                    <div class="dropdown">
+                        <button class="btn btn-info border dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                          Complete Status <i class="fas fa-filter ml-2"></i>
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <button type="submit" name="idCompStatus" value="pending" class="dropdown-item">Pending</button>
+                            <button type="submit" name="idCompStatus" value="approved" class="dropdown-item">Approved</button>
+                            <button type="submit" name="idCompStatus" value="rejected" class="dropdown-item">Rejected</button>
+                            <button type="submit" name="idCompStatus" value="" class="dropdown-item">All</button>
+                        </div>
+                      </div>
+                </th>
+                <th scope="col">Remarks</th>
+                <th scope="col">Process</th>        
+            </tr>
+        </thead>
+
+        <tbody>
+            
+        
+        {% for request in requests %}
+        
+        <tr>
+            <td> {{ request.Serv_Type }} </td>
+            <td>{{ request.Serv_Applied_By.first_name }} {{ request.Serv_Applied_By.last_name }}</td>
+            <td>{{ request.Serv_Name }}</td>
+            <td>{{ request.Serv_Applied_Date.date }}</td>
+            {% if request.Serv_Approval_Status == 'pending' %}
+                <td class="bg-warning">{{ request.Serv_Approval_Status }}</td>
+            {% elif request.Serv_Approval_Status == 'approved' %}
+                <td class="bg-success">{{ request.Serv_Approval_Status }}</td>
+            {% endif %}
+            {% if request.Serv_Completion_Status == 'pending' %}
+                <td class="bg-warning">{{ request.Serv_Completion_Status }}</td>
+            {% elif request.Serv_Completion_Status == 'approved' %}
+                <td class="bg-success">{{ request.Serv_Completion_Status }}</td>
+            {% else %}
+                <td class="">{{ request.Serv_Completion_Status }}</td>
+            {% endif %}
+            
+            <td>{{ request.Serv_Remarks }}</td>
+            <td>
+                {% if request.Serv_Approval_Status == 'pending' or request.Serv_Completion_Status == 'pending' %}
+                <a class="btn btn-outline-primary" href="{% url 'ProcessRequestURL' request.id %}">Process Request</a>
+                {% else %}
+                    NA
+                {% endif %}
+            </td>
+        </tr>
+        
+        {% empty %}
+        <tr>
+            <td align="center" colspan="7" >No Entries</td>
+        </tr>
+        
+        
+        
+        {% endfor %}
+        </tbody>
+        </table>
+    </form>
+    <button class="btn btn-success float-right mt-2" onclick="exportData()">
+        <span class="fas fa-download"></span>
+        Download Table Data
+    </button><br><br>
+    <p class="float-right text-dark rounded border ">
+        (In Excel/Json format)
+    </p>
+        
+        {% if is_paginated %}
+        <div class="ml-5 mt-5 card-body">
+            {% if page_obj.has_previous %}
+                <a class="btn btn-outline-primary mb-4" href="?page=1">First</a>
+                <a class="btn btn-outline-primary mb-4" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+            {% endif %}
+        
+            {% for num in page_obj.paginator.page_range %}
+                {% if page_obj.number == num %}
+                    <a class="btn btn-primary mb-4" href="?page={{ num }}">{{ num }}</a>
+                {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                    <a class="btn btn-outline-primary mb-4" href="?page={{ num }}">{{ num }}</a>
+                {% endif %}
+        
+            {% endfor %}
+        
+            {% if page_obj.has_next %}
+                <a class="btn btn-outline-primary mb-4" href="?page={{ page_obj.next_page_number }}">Next</a>
+                <a class="btn btn-outline-primary mb-4" href="?page={{ page_obj.paginator.num_pages }}">Last</a>
+            {% endif %}	
+        </div>
+        {% endif %}
+
+</div>
+
+
+
+{% endblock content %}
