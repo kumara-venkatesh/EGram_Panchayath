@@ -3,12 +3,113 @@
 {% block content %}
 
 
+<style>
+    .pgval{
+        margin-top: -20px;
+    }
+    
+    .statusval{
+        border: 1px solid;
+        background-color: white;
+        border-radius: 5px;
+        padding: 8px;
+        
+    }
+      
+    .text {
+        color: #2F8D46;
+        font-weight: normal
+    }
+      
+    #progressbar .active1 {
+        color: #2F8D46
+    }
+      
+    #progressbar li {
+        list-style-type: none;
+        color: lightgray;
+        font-size: 15px;
+        width: 25%;
+        float: left;
+        position: relative;
+        font-weight: 400;
+    }
+      
+      
+    #progressbar li.active1:before,
+    #progressbar li.active1:after {
+        background: #2F8D46
+    }
+      
+    
+    </style>
+
 
 <div class="m-5">
-    
+
+    {% csrf_token %}   
     <div class="card shadow">
         
         <div class="card-header">
+        
+            <div class="row justify-content-center ">
+                <div class="col-12 text-center">
+                    <div class="">
+                       
+                            <ul id="progressbar">
+                                {% if object.Serv_Approval_Status == 'pending' %}
+                                    <li class="active1" id="step1">
+                                        <strong class="statusval">Applied</strong>
+                                    </li>
+                                    <li class="" id="step2"><strong class="statusval">Approved</strong></li>
+                                    <li class="" id="step3"><strong class="statusval">Processing</strong></li>
+                                    <li class="" id="step4"><strong class="statusval">Completed</strong></li>
+                                {% elif object.Serv_Approval_Status == 'approved' and object.Serv_Completion_Status != 'completed' %}
+                                    <li class="active1" id="step1">
+                                        <strong class="statusval">Applied</strong>
+                                    </li>
+                                    <li class="active1" id="step2"><strong class="statusval">Approved</strong></li>
+                                    <li class="active1" id="step3"><strong class="statusval">Processing</strong></li>
+                                    <li class="" id="step4"><strong class="statusval">Completed</strong></li>
+                                {% elif object.Serv_Approval_Status == 'rejected' %}
+                                    <li class="active1" id="step1">
+                                        <strong class="statusval">Applied</strong>
+                                    </li>
+                                    <li class="" id="step2"><strong class="statusval text-danger">Rejected</strong></li>
+                                    <li class="" id="step3"><strong class="statusval">Processing</strong></li>
+                                    <li class="" id="step4"><strong class="statusval">Completed</strong></li>
+    
+                                {% elif object.Serv_Completion_Status == 'completed' %}
+                                    <li class="active1" id="step1">
+                                        <strong class="statusval">Applied</strong>
+                                    </li>
+                                    <li class="active1" id="step2"><strong class="statusval">Approved</strong></li>
+                                    <li class="active1" id="step3"><strong class="statusval">Processing</strong></li>
+                                    <li class="active1" id="step4"><strong class="statusval">Completed</strong></li>
+    
+                                {% endif %}
+                            </ul>
+                         
+                    </div>
+                </div>
+            </div>
+            {% if object.Serv_Approval_Status == 'pending' %}
+                <div class="pgval progress mb-3">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: 20%;"></div>
+                </div>
+            {% elif object.Serv_Approval_Status == 'approved' and object.Serv_Completion_Status != 'completed'  %}
+                <div class="pgval progress mb-3">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: 70%;"></div>
+                </div>
+            {% elif object.Serv_Approval_Status == 'rejected' %}
+                <div class="pgval progress mb-3">
+                    <div class="progress-bar progress-bar-striped bg-danger" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: 40%;"></div>
+                </div>
+            {% elif object.Serv_Completion_Status == 'completed' %}
+                <div class="pgval progress mb-3">
+                    <div class="progress-bar progress-bar-striped bg-success" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: 100%;"></div>
+                </div>
+            {% endif %}
             
 
             <h4 class="">{{ object.Serv_Name }}</h4>
@@ -40,13 +141,21 @@
                             <h6><br><u>Address:</u></h6>
                             <b>State</b> : {{ object.Serv_State }}<br>
                             <b>City</b> : {{ object.Serv_City }}<br>
-                            <b>Complete Location</b> : {{ object.Serv_Location }}<br>
+                            <h4>Complete Location</h4> : {{ object.Serv_Location }}<br>
 
                         </div>
-                        <div class="col-sm-3 p-2 rounded " style="background-color: rgb(238, 235, 235);">
-                            <h6>Complaint Image</h6>
-                            <img class="rounded" src="{{ object.Serv_Req_Image.url }}" width="300px" height="300px">
-                            
+                        <div class="row">
+                            <div class="col rounded " style="background-color: rgb(238, 235, 235);">
+                                <h6>Complaint Image</h6>
+                                <img class="rounded" src="{{ object.Serv_Req_Image.url }}" width="300px" height="300px">
+                                
+                            </div>
+                            <div class="col rounded " style="background-color: rgb(238, 235, 235);">
+                                <h6>Service Completion Image</h6>
+                                {% if object.Serv_Comp_Image %}
+                                    <img class="rounded" src="{{ object.Serv_Comp_Image.url }}" width="300px" height="300px">
+                                {% endif %}
+                            </div>
                         </div>
 
                        
@@ -54,46 +163,60 @@
                     
                 </div>
                 
-
-                <div class="rounded form-group card" >
+                
+                <div class="col-sm-6 rounded form-group card" >
                     <div class="card-header">
                         <h5>PDO Action on this Request</h5>
                     </div>
                     
                     <div class="card-body">
-                        {% if object.Serv_Approval_Status == 'pending' %}
+                        
+                        <form name = "Service_Approval_form" method="POST" data-toggle="validator" role="form" enctype="multipart/form-data">
+                            {% csrf_token %}
                             <div class=" mt-3 border p-3 rounded shadow">
-
-                            
-                                <h6>Please Accept/Reject the below request with the valid remarks</h6>
-                                <input class="form-control" type="text" placeholder="Remarks" required>
-                                <input type="image" class="btn" name="Submit" src="/media/Approve.PNG" width="100">
-                                <input type="image" class="btn" name="Submit" src="/media/Reject.PNG" width="100">
-                                
+                                <input type="hidden" name="Object_id" value="{{object.id}}">
+                                <h6>Service Approval form:</h6>
+                                {% if object.Serv_Approval_Status == 'pending' %}
+                                    <h6>Please Accept/Reject the below request with the valid remarks</h6>
+                                    <input class="form-control" type="text" name="serv_remarks" placeholder="Remarks" required><br>
+                                    <input type="submit" class="btn btn-success" value="approved" name="Approval_Submit">
+                                    <input type="submit" class="btn btn-danger ml-4" value="rejected" name="Approval_Submit">
+                                {% else %}
+                                <h5 style="text-transform:uppercase;" class="p-3 bg-light">{{ object.Serv_Approval_Status }}</h5>
+                                {% endif %}
                             </div>
-
+                        </form>
+                        
+                        
+                        <form name = "Service_Completion_form" method="POST" data-toggle="validator" role="form" enctype="multipart/form-data">
+                            {% csrf_token %}
                             <div class=" mt-3 border p-3 rounded shadow">
 
                             
-                                <h6>Service Updates:</h6>
-                                <div class="input-group form-group">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text"><i class="fas fa-file-alt mr-2"></i>Snapshot of Work Completed</span>
+                                <h6>Service Completion form:</h6>
+                                {% if object.Serv_Completion_Status == 'pending'%}
+                                    <div class="input-group form-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fas fa-file-alt mr-2"></i>Snapshot of Work Completed</span>
+                                        </div>
+                                        
+                                        <input type="file" onchange="check_file(this)" class="btn btn-light" id="CImage" accept=".jpg,.jpeg,.png" name="CImage" required>  
+                                        
                                     </div>
                                     
-                                    <input type="file" onchange="check_file(this)" class="btn btn-light" id="CImage" accept=".jpg,.jpeg,.png" name="CImage" required>  
-                                    
-                                </div>
-                                
-                                <div class="p-2 text-muted">
-                                    <input class="form-control" type="text" placeholder="Remarks" required><br>
-            
-                                    <input type="submit" class="btn btn-primary"  name="Submit" value="Submit">
-                                </div>
+                                    <div class="p-2 text-muted">
+                                        <input class="form-control" type="text" placeholder="Remarks" required><br>
+                
+                                        <input type="submit" class="btn btn-primary"  name="Completion_Submit" value="Submit">
+                                    </div>
+                                {% else %}
+                                <h5 style="text-transform:uppercase;" class="p-3 bg-light">{{ object.Serv_Completion_Status }}</h5>
+                                {% endif %}
                                 
                                 
                             </div>
-                            {% endif %}
+                            </form>
+                            
                         
                     </div>
                     
@@ -117,6 +240,7 @@
         </div>
 
     </div>
+
 
 </div>
 

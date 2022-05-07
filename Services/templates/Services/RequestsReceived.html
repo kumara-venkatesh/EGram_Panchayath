@@ -75,10 +75,12 @@
                 <td class="bg-warning">{{ request.Serv_Approval_Status }}</td>
             {% elif request.Serv_Approval_Status == 'approved' %}
                 <td class="bg-success">{{ request.Serv_Approval_Status }}</td>
+            {% elif request.Serv_Approval_Status == 'rejected' %}
+                <td class="bg-danger">{{ request.Serv_Approval_Status }}</td>
             {% endif %}
             {% if request.Serv_Completion_Status == 'pending' %}
                 <td class="bg-warning">{{ request.Serv_Completion_Status }}</td>
-            {% elif request.Serv_Completion_Status == 'approved' %}
+            {% elif request.Serv_Completion_Status == 'completed' %}
                 <td class="bg-success">{{ request.Serv_Completion_Status }}</td>
             {% else %}
                 <td class="">{{ request.Serv_Completion_Status }}</td>

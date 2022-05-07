@@ -6,6 +6,8 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 from .models import Services, Certificates
 from django.contrib import messages
 import datetime
+from django.http import HttpResponseRedirect
+from django.shortcuts import redirect
 
 
 # Create your views here.
@@ -201,6 +203,23 @@ class ReceivedRequests(ListView):
 class ProcessRequest(DetailView):
     model = Services
     template_name_suffix = '_process_request_details'
+    def post(self, request, **kwargs):
+        obj_id = request.POST.get('Object_id')
+        value = request.POST.get('Approval_Submit')
+        if value:
+            current_process = Services.objects.get(id=obj_id)
+            current_process.Serv_Approval_Status = value
+            current_process.Serv_Remarks = request.POST.get('serv_remarks')
+            if value == 'approved':
+                current_process.Serv_Completion_Status = 'pending'
+                messages.warning(request,"Request is rejected")
+            if value == 'rejected':
+                current_process.Serv_Completion_Status = 'rejected'
+                messages.warning(request,"Request is rejected")
+            current_process.save()
+            
+        return redirect('ProcessRequestURL',pk=obj_id)
+        #return HttpResponseRedirect(self.request.path_info)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
