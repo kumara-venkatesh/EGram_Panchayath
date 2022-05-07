@@ -114,7 +114,6 @@
                     {% if user.profile.Department != 'public' %}
                       <li class="nav-item notification">
                         <a class="navhead bg-light rounded nav-link text-info" href="{% url 'ReqReceived' %}">Requests</a>
-                        <span class="badge">3</span>
                       </li>
                       <li class="nav-item">
                       <a class="navhead bg-light rounded nav-link text-info ml-3" href="{% url 'profile' %}">{{ user.first_name }} {{ user.last_name }}-(Profile)</a>
