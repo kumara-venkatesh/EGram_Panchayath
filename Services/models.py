@@ -28,23 +28,28 @@ class Services(models.Model):
 
 
 class Certificates(models.Model):
-    Cert_Type = models.CharField(max_length=50)
+    Cert_Name = models.CharField(max_length=50)
     Cand_Name = models.CharField(max_length=50)
     Father_Name = models.CharField(max_length=50)
     Mother_Name = models.CharField(max_length=50)
     Address = models.CharField(max_length=300)
-    govt_id = models.CharField(max_length=30)
-    govt_proof_document = models.FileField(upload_to='Files/')
+    doc_name = models.CharField(max_length=30)
+    Cert_Requested_By = models.ForeignKey(User, on_delete=models.CASCADE,default=None, null=True, blank=True)
+    Cert_Applied_Date = models.DateTimeField(default=timezone.now)
+    document_proof = models.FileField(upload_to='Files/',default=None, null=True, blank=True)
     Birth_Date = models.DateField()
+    phoneno = models.CharField(max_length=10, default=None, null=True, blank=True)
     Birth_location = models.CharField(max_length=200, default=None, null=True, blank=True)
     Death_Date = models.DateField(default=None, null=True, blank=True)
     Death_location = models.CharField(max_length=200, default=None, null=True, blank=True)
     Cast = models.CharField(max_length=50, default=None, null=True, blank=True)
     Cast_Category = models.CharField(max_length=10, default=None, null=True, blank=True)
     Income_Value = models.CharField(max_length=20, default=None, null=True, blank=True)
-    document_proof = models.FileField(upload_to='Files/', default=None, null=True, blank=True)
     Remarks = models.TextField()
     Approval_Status = models.CharField(max_length=20)
+    Completion_Status = models.CharField(max_length=20, default=None, null=True, blank=True)
+    certificate = models.FileField(upload_to='Certificates/',default=None, null=True, blank=True)
+    Cert_Estimated_Completion_Date = models.DateField(default=None, null=True, blank=True)
 
     def __str__(self) -> str:
         return super().__str__()

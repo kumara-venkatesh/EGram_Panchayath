@@ -112,11 +112,17 @@
 
                   {% if user.is_authenticated %}
                     {% if user.profile.Department != 'public' %}
-                      <li class="nav-item notification">
-                        <a class="navhead bg-light rounded nav-link text-info" href="{% url 'ReqReceived' %}">Requests</a>
+                      <li class="nav-item dropdown">
+                        <a class="navhead bg-light rounded nav-link text-info dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                          Requests
+                        </a>
+                        <ul class="dropdown-menu">
+                            <a class="navhead bg-light nav-link text-info" href="{% url 'ReqReceived' %}">Service/Complaint Requests</a>
+                            <a class="navhead bg-light nav-link text-info" href="{% url 'ReqReceived' %}">Certificate Requests</a>
+                        </ul>
                       </li>
                       <li class="nav-item">
-                      <a class="navhead bg-light rounded nav-link text-info ml-3" href="{% url 'profile' %}">{{ user.first_name }} {{ user.last_name }}-(Profile)</a>
+                      <a class="navhead bg-light rounded nav-link text-info" href="{% url 'profile' %}">{{ user.first_name }} {{ user.last_name }}-(Profile)</a>
                     </li>
 
 
@@ -125,23 +131,26 @@
 
                       <li class="nav-item dropdown">
                         <a class="navhead bg-light rounded nav-link text-info dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                          Requests
+                          Raise Requests
                         </a>
-                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-
-                          <div class="dropdown-submenu dropright" >
-                            <a class="test navhead bg-light nav-link text-info dropdown-toggle" href="#" >Services</a>
+                        
                             <ul class="dropdown-menu">
-                              <a class="navhead bg-light nav-link text-info" href="{% url 'ServiceReq' %}">Service Request</a>
+                              <a class="navhead bg-light nav-link text-info" href="{% url 'ServiceReq' %}">Raise Service Request</a>
                               <a class="navhead bg-light nav-link text-info" href="{% url 'ComplaintReq' %}">Raise Complaint</a>
-                            </ul>
-                              
-                          </div>
-                          <a class="navhead bg-light nav-link text-info" href="{% url 'CertificateReq' %}">Certificate Request</a>
-                          <a class="navhead bg-light nav-link text-info" href="{% url 'MyRequests' %}">My Requests</a>
-                          
-                        </div>   
+                              <a class="navhead bg-light nav-link text-info" href="{% url 'CertificateReq' %}">Request for Certificate</a>
+                            </ul> 
                       </li>
+                      
+                      <li class="nav-item dropdown">
+                        
+                          <a class="navhead bg-light rounded nav-link text-info dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            My Requests
+                          </a>
+                          <ul class="dropdown-menu">
+                            <a class="navhead bg-light nav-link text-info" href="{% url 'MySerCompRequests' %}">Service/Complaint Requests</a>
+                            <a class="navhead bg-light nav-link text-info" href="{% url 'MyCertRequests' %}">Certificate Requests</a>
+                          </ul>
+                    </li>
                       
 
                     

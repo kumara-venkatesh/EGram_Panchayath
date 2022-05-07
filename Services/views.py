@@ -111,11 +111,48 @@ def ServiceComplaint(request):
 
 
 def CertificateRequest(request):
+    if request.method == 'POST':
+        requested_by = request.user
+        cert_name = request.POST.get('ReqName')
+        cand_name = request.POST.get('fname') + ' ' + request.POST.get('lname')
+        father_name = request.POST.get('father_name')
+        mother_name = request.POST.get('mother_name')
+        phone_no = request.POST.get('cnumber')
+        complete_address = request.POST.get('Location')
+        state_name = request.POST.get('state_name')
+        city_name = request.POST.get('city_name')
+        Comp_address = "State : {state}, City : {city}, Complete Address : {address}".format(state=state_name, city=city_name, address=complete_address)
+        birth_date = request.POST.get('birthday')
+        birth_place = request.POST.get('birthplace')
+        death_date = request.POST.get('deathday')
+        death_place = request.POST.get('deathplace')
+        caste_name = request.POST.get('caste_name')
+        caste_category = request.POST.get('caste_category')
+        annual_income = request.POST.get('annualincome')
+        doc_name = request.POST.get('DocName')
+        applied_date = datetime.datetime.now()
+
+        if request.FILES.__contains__('doc_proof'):
+            doc_proof = request.FILES['doc_proof']
+            fs = FileSystemStorage()
+            fs.save(doc_proof.name, doc_proof)
+        
+        cert_details = Certificates.objects.create(Cert_Name=cert_name, Cand_Name=cand_name, Father_Name=father_name,
+                                                   Mother_Name=mother_name, Address=Comp_address, doc_name=doc_name, 
+                                                   Cert_Requested_By=requested_by, document_proof=doc_proof,
+                                                   Birth_Date=birth_date, phoneno=phone_no, Birth_location=birth_place,
+                                                   Death_Date=death_date, Death_location=death_place, 
+                                                   Cast=caste_name, Cast_Category=caste_category, Income_Value=annual_income,
+                                                   Remarks='', Approval_Status='pending', Completion_Status='NA',Cert_Applied_Date=applied_date)
+        cert_details.save()
+        messages.warning(request,'Certificate request applied successfully.')
+
+
     return render(request, 'Services/Certificates.html')
 
-class MyRequests(ListView):
+class My_Ser_Comp_Requests(ListView):
     model = Services
-    template_name = "Services/MyRequests.html"
+    template_name = "Services/MyServCompRequests.html"
     context_object_name = 'requests'
     paginate_by = 5
 
@@ -143,6 +180,39 @@ class MyRequests(ListView):
 
         return req
 
+class My_Cert_Requests(ListView):
+    model = Certificates
+    template_name = "Services/MyCertRequests.html"
+    context_object_name = 'requests'
+    paginate_by = 5
+
+    def get_queryset(self):
+        req = Certificates.objects.filter(Cert_Requested_By=self.request.user).order_by('-Cert_Applied_Date')
+
+        def ExecQuery(req, Cert):
+            key = list(Cert.keys())[0]
+            if key=='Cert_Approval_Status':
+                req = req.filter(Approval_Status=Cert[key]).order_by('-Cert_Applied_Date')
+            if key=='Cert_Completion_Status':
+                req = req.filter(Completion_Status=Cert[key]).order_by('-Cert_Applied_Date')
+            return req
+
+        if self.request.GET.get('idAppStatus'):
+            req = ExecQuery(req, {'Cert_Approval_Status':self.request.GET.get('idAppStatus')})
+        
+        if self.request.GET.get('idCompStatus'):
+            req = ExecQuery(req, {'Cert_Completion_Status':self.request.GET.get('idCompStatus')})
+
+        return req
+
+class CertificateDetailView(DetailView):
+    model = Certificates
+    template_name_suffix = '_details'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        userinfo = self.request.user
+        return context
 
 class ServiceDetailView(DetailView):
     model = Services
@@ -151,23 +221,6 @@ class ServiceDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         userinfo = self.request.user
-        #UserName = userinfo.first_name + ' ' + userinfo.last_name
-        #applyjob = self.request.GET.get('applyjob')
-        '''if self.request.method == "GET":
-
-            if applyjob:
-                postby = Post.objects.get(id=applyjob)
-                email = postby.Creator
-                check = JobApplication.objects.filter(AppliedFor=postby, AppliedBy=userinfo)
-                if check.exists():
-                    messages.warning(self.request, f'You have already applied for this job')
-                else:
-                    apply_job = JobApplication.objects.create(AppliedBy=userinfo, AppliedFor=postby)
-                    apply_job.save()
-                    messages.success(self.request, 'Job Applied Successfully')
-                    msg_body = "You have received an Application for the Job Post {} from {}, \n Applicant Email : {}".format(postby, UserName, userinfo.email)
-                    send_mail('Application Received', msg_body,
-                              settings.EMAIL_HOST_USER, [email], fail_silently=False, )'''
         return context
 
 class ReceivedRequests(ListView):
@@ -219,7 +272,6 @@ class ProcessRequest(DetailView):
             current_process.save()
             
         return redirect('ProcessRequestURL',pk=obj_id)
-        #return HttpResponseRedirect(self.request.path_info)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

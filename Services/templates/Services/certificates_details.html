@@ -1,0 +1,287 @@
+{% extends 'services\Base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+
+
+<style>
+.pgval{
+    margin-top: -20px;
+}
+
+.statusval{
+    border: 1px solid;
+    background-color: white;
+    border-radius: 5px;
+    padding: 8px;
+    
+}
+  
+.text {
+    color: #2F8D46;
+    font-weight: normal
+}
+  
+#progressbar .active1 {
+    color: #2F8D46
+}
+  
+#progressbar li {
+    list-style-type: none;
+    color: lightgray;
+    font-size: 15px;
+    width: 25%;
+    float: left;
+    position: relative;
+    font-weight: 400;
+}
+  
+  
+#progressbar li.active1:before,
+#progressbar li.active1:after {
+    background: #2F8D46
+}
+  
+
+</style>
+
+
+<div class="m-5">
+    
+    <div class="card shadow">
+        
+        <div class="card-header">
+            <div class="row justify-content-center ">
+                <div class="col-12 text-center">
+                    <div class="">
+                       
+                            <ul id="progressbar">
+                                {% if object.Approval_Status == 'pending' %}
+                                    <li class="active1" id="step1">
+                                        <strong class="statusval">Applied</strong>
+                                    </li>
+                                    <li class="" id="step2"><strong class="statusval">Approved</strong></li>
+                                    <li class="" id="step3"><strong class="statusval">Processing</strong></li>
+                                    <li class="" id="step4"><strong class="statusval">Completed</strong></li>
+                                {% elif object.Approval_Status == 'approved' and object.Completion_Status != 'completed' %}
+                                    <li class="active1" id="step1">
+                                        <strong class="statusval">Applied</strong>
+                                    </li>
+                                    <li class="active1" id="step2"><strong class="statusval">Approved</strong></li>
+                                    <li class="active1" id="step3"><strong class="statusval">Processing</strong></li>
+                                    <li class="" id="step4"><strong class="statusval">Completed</strong></li>
+                                {% elif object.Approval_Status == 'rejected' %}
+                                    <li class="active1" id="step1">
+                                        <strong class="statusval">Applied</strong>
+                                    </li>
+                                    <li class="" id="step2"><strong class="statusval text-danger">Rejected</strong></li>
+                                    <li class="" id="step3"><strong class="statusval">Processing</strong></li>
+                                    <li class="" id="step4"><strong class="statusval">Completed</strong></li>
+
+                                {% elif object.Completion_Status == 'completed' %}
+                                    <li class="active1" id="step1">
+                                        <strong class="statusval">Applied</strong>
+                                    </li>
+                                    <li class="active1" id="step2"><strong class="statusval">Approved</strong></li>
+                                    <li class="active1" id="step3"><strong class="statusval">Processing</strong></li>
+                                    <li class="active1" id="step4"><strong class="statusval">Completed</strong></li>
+
+                                {% endif %}
+                            </ul>
+                         
+                    </div>
+                </div>
+            </div>
+            {% if object.Approval_Status == 'pending' %}
+                <div class="pgval progress mb-3">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-warning" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: 20%;"></div>
+                </div>
+            {% elif object.Approval_Status == 'approved' and object.Completion_Status != 'completed'  %}
+                <div class="pgval progress mb-3">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: 70%;"></div>
+                </div>
+            {% elif object.Approval_Status == 'rejected' %}
+                <div class="pgval progress mb-3">
+                    <div class="progress-bar progress-bar-striped bg-danger" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: 40%;"></div>
+                </div>
+            {% elif object.Completion_Status == 'completed' %}
+                <div class="pgval progress mb-3">
+                    <div class="progress-bar progress-bar-striped bg-success" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: 100%;"></div>
+                </div>
+            {% endif %}
+
+            <h4 class="">{{ object.Cert_Name }}</h4>
+            <img class="rounded-circle" src="{{ object.Cert_Requested_By.profile.profile_pic.url }}" width="70px" height="70px"><br>
+            <label class="text-muted">Applied by {{ object.Cert_Requested_By.first_name }} {{object.Cert_Requested_By.last_name}}, On {{ object.Cert_Applied_Date }}</label>
+            
+            
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-sm-7">
+
+                    <div class="rounded border shadow p-3">                        
+                        
+                        <div class="form-group rounded border p-2">
+
+                            <div class="p-2">
+                                <div class="input-group form-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fas fa-user-alt mr-2"></i>Candidate Name</span>
+                                    </div>
+                                    <label class="form-control">{{ object.Cand_Name }}</label>
+                                        
+                                </div>
+                            
+                                <div class="input-group form-group">
+                                  <div class="input-group-prepend">
+                                      <span class="input-group-text"><i class="fas fa-user-alt mr-2"></i>Father Name</span>
+                                  </div>
+                                  <label class="form-control">{{ object.Father_Name }}</label>
+                                  <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fas fa-user-alt mr-2"></i>Mother Name</span>
+                                  </div>
+                                  <label class="form-control">{{ object.Mother_Name }}</label>
+                                </div>
+                                {% if object.Cert_Name == 'Caste Certificate' %}
+                                <div id="div_caste" class="form-group input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fas fa-user-alt mr-2"></i>Caste</span>
+                                    </div>
+                                    <label class="form-control">{{ object.Cast }}</label>
+                                    <div class="input-group-prepend">
+                                      <span class="input-group-text"><i class="fas fa-user-alt mr-2"></i>Caste Category</span>
+                                    </div>
+                                    <label class="form-control">{{ object.Cast_Category }}</label>
+                                </div>
+                                {% endif %}
+                            
+                                <div class="input-group form-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fas fa-calendar-alt mr-2"></i> Date of Birth</span>
+                                    </div>
+                                    <label class="form-control">{{ object.Birth_Date }}</label>
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fas fa-phone"></i></span>
+                                    </div>
+                                    
+                                    <label class="form-control">{{ object.phoneno }}</label>
+                            
+                                </div>
+                                {% if object.Cert_Name == 'Income Certificate' %}
+                                <div id="div_income" class="input-group form-group">
+                                  <div class="input-group-prepend">
+                                      <span class="input-group-text"><i class="fas fa-rupee-sign mr-2"></i>Annual Income</span>
+                                  </div>
+                                  
+                                  <label class="form-control">{{ object.Income_Value }}</label>
+                                </div>
+                                {% endif %}
+                                
+                                {% if object.Cert_Name == 'Birth Certificate' %}
+                                <div id="div_birth_place" class="input-group form-group">
+                                  <div class="input-group-prepend">
+                                      <span class="input-group-text"><i class="fas fa-map-marker-alt mr-2"></i>Birth Place</span>
+                                  </div>
+                                  
+                                  <label class="form-control">{{ object.Birth_location }}</label>
+                                </div>
+                                {% endif %}
+                            
+                                <div class="form-group input-group ">
+                                  <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fas fa-map-marker-alt mr-2"></i>Address</span>
+                                  </div>
+                                  
+                                  <textarea class="form-control" disabled>{{ object.Address }}</textarea>
+                               </div>
+
+                               {% if object.Cert_Name == 'Death Certificate' %}
+                                <div id="xxx" class="input-group form-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fas fa-calendar-alt mr-2"></i>Date of Death</span>
+                                    </div>
+                                    
+                                    <label class="form-control">{{ object.Death_Date }}</label>
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fas fa-map-marker-alt mr-2"></i>Death Place</span>
+                                    </div>
+                                    
+                                    <label class="form-control">{{ object.Death_location }}</label>
+                            
+                                </div>
+
+                                {% endif %}
+                            
+                                
+                            
+                                <div class="form-group input-group ">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fas fa-file mr-2"></i>Document Name</span>
+                                    </div>
+                                    
+                                    <label class="form-control">{{ object.doc_name }}</label>
+                                    
+                                  </div>    
+                                  <div class="form-group input-group ">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fas fa-file-alt mr-2"></i>Document</span>
+                                    </div>
+                                    
+                                    <label class="form-control">
+                                        <a href="{{ object.document_proof.url }}">{{ object.document_proof.url }}</a>
+                                    </label>
+
+                                  </div>
+                            </div>
+                        </div>
+
+                        
+                    </div>
+                    
+                    
+                </div>
+                <div class="col-sm-4">
+                    <div class="rounded border shadow p-3"> 
+                    
+                        <h6><u>PDO Updates:</u></h6>
+                            <p>
+                                <b>Approval Status : <label style="text-transform:uppercase;" class="text-info">{{ object.Approval_Status }}</label></b><br>
+                                <b>Completion Status : <label style="text-transform:uppercase;" class="text-info">{{ object.Completion_Status }}</b></label><br>
+                                <b>Estimated Completion Date : <label style="text-transform:uppercase;" class="text-info">{{ object.Cert_Estimated_Completion_Date }}</label></b><br>
+                                <b>Remarks</b> : {{ object.Remarks }}<br>
+                            </p>
+                        
+                    </div>
+                    
+                </div>
+
+            </div>
+
+            <div class="rounded border p-3">
+                <h6>Certificate</h6>
+                {% if object.certificate.url != none %}
+                <img class="rounded" src="{{ object.certificate.url }}" width="300px" height="300px">
+                {% endif %}
+                
+            </div>
+
+            
+        </div>
+        <div class="card-footer">
+            {% if user.profile.Department == 'public' %}
+                {% if object.Cert_Requested_By == user and object.Approval_Status == 'pending'%}
+                    <a class="btn btn-outline-danger mr-4" href="#"><img src="/media/delete.png" width="30" height="30">Delete Request</a>
+                    <a class="btn btn-outline-secondary mr-4" href="#"><img src="/media/edit.png" width="30" height="30">Edit Request</a>
+
+                {% endif %}
+
+            {% endif %}
+
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock content %}

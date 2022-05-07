@@ -33,10 +33,23 @@
 </script>
 
 <script>
+
+  $('#cert_form').validate({ 
+   ignore: ".hidden" 
+  });
     
   function SetDoc()
   {
+    $("#xxx *").prop('disabled',true);
     $("#xxx").hide();
+    $("#div_birth_place *").prop('disabled',true);
+    $("#div_birth_place").hide();
+    $("#div_death_place *").prop('disabled',true);
+    $("#div_death_place").hide();
+    $("#div_caste *").prop('disabled',true);
+    $("#div_caste").hide();
+    $("#div_income *").prop('disabled',true);
+    $("#div_income").hide();
     var reqName = document.getElementById('ReqName').value;
     var doc = document.getElementById('DocName');
     doc.innerHTML = "";
@@ -48,6 +61,8 @@
 
     if (reqName == "Income Certificate")
     {
+      $("#div_income").show();
+      $("#div_income *").prop('disabled',false);
       option = document.createElement("option");
       option.text = "Salary Slip";
       doc.appendChild(option);
@@ -56,18 +71,22 @@
       doc.appendChild(option);
       
     }
-    if (reqName == "Cast Certificate")
+    if (reqName == "Caste Certificate")
     {
+      $("#div_caste *").prop('disabled',false);
+      $("#div_caste").show();
       option = document.createElement("option");
       option.text = "S.S.L.C Marksheet";
       doc.appendChild(option);
       option = document.createElement("option");
-      option.text = "Transfer Certificate (School/Colleg)";
+      option.text = "Transfer Certificate (School/College)";
       doc.appendChild(option);
 
     }
     if (reqName == "Birth Certificate")
     {
+      $("#div_birth_place *").prop('disabled',false);
+      $("#div_birth_place").show();
       option = document.createElement("option");
       option.text = "Hospital Birth Receipt";
       doc.appendChild(option);
@@ -81,7 +100,10 @@
     }
     if (reqName == "Death Certificate")
     {
+      $("#xxx *").prop('disabled',false);
       $("#xxx").show();
+      $("#div_death_place *").prop('disabled',false);
+      $("#div_death_place").show();
       option = document.createElement("option");
       option.text = "Hospital Death Summary";
       doc.appendChild(option);
@@ -93,18 +115,14 @@
 }
 </script>
 
-
-
 <script type="text/javascript">
 
 </script>
 
-
-
 <div class="container col-md-6 mb-5">
 
 {% if user.profile.Department == 'public' %}
-<form method="POST" data-toggle="validator" role="form" enctype="multipart/form-data">
+<form method="POST" id="cert_form" data-toggle="validator" role="form" enctype="multipart/form-data">
   {% csrf_token %}
 <div class="card mt-5">
     <div class="card-header mb-2" style="border:solid 2.5px; border-top: hidden; border-left: hidden; border-right: hidden; border-bottom-color: #17a2b8">
@@ -124,7 +142,7 @@
         <select class="form-control" name="ReqName" id="ReqName" onchange="SetDoc()" required>
             <option disabled selected></option>
             <option>Income Certificate</option>
-            <option>Cast Certificate</option>
+            <option>Caste Certificate</option>
             <option>Birth Certificate</option>
             <option>Death Certificate</option>
             
@@ -137,6 +155,38 @@
         
             <input type="text" class="form-control" name="fname" minlength="5" maxlength="20" placeholder="First Name" required>
             <input type="text" class="form-control" name="lname" minlength="1" maxlength="20" placeholder="Last Name" required>
+    </div>
+
+    <div class="input-group form-group">
+      <div class="input-group-prepend">
+          <span class="input-group-text"><i class="fas fa-user-alt"></i></span>
+      </div>
+      
+          <input type="text" class="form-control" name="father_name" minlength="5" maxlength="20" placeholder="Father Name" required>
+          <input type="text" class="form-control" name="mother_name" minlength="5" maxlength="20" placeholder="Mother Name" required>
+    </div>
+
+    <div id="div_caste" class="form-group input-group " style="display: none;">
+      <div class="input-group-prepend">
+        <span class="input-group-text">Caste</span>
+      </div>
+      
+      <select id="caste_name" name ="caste_name" class="form-control" required>
+            <option disabled selected>Select Caste</option>
+            <option>General</option>
+            <option>Backward</option>
+            <option>Forward</option>
+            <option>Others</option>
+      </select>
+      <select id ="caste_category" name="caste_category" class="form-control" required>
+            <option disabled selected>Select Category</option>
+            <option>1A</option>
+            <option>1B</option>
+            <option>2A</option>
+            <option>2B</option>
+            <option>3A</option>
+            <option>3B</option>
+      </select>
     </div>
 
     <div class="input-group form-group">
@@ -159,9 +209,25 @@
 
     </div>
 
+    <div id="div_income" class="input-group form-group" style="display:none;">
+      <div class="input-group-prepend">
+          <span class="input-group-text"><i class="fas fa-rupee-sign mr-2"></i>Annual Income</span>
+      </div>
+      
+      <input type="number" min="20000" max="1000000000" class="form-control" id="annualincome" name="annualincome" required >
+    </div>
+
+    <div id="div_birth_place" class="input-group form-group" style="display:none;">
+      <div class="input-group-prepend">
+          <span class="input-group-text"><i class="fas fa-map-marker-alt mr-2"></i>Birth Place</span>
+      </div>
+      
+      <input type="text" class="form-control" id="birthplace" name="birthplace" required >
+    </div>
+
     <div class="form-group input-group ">
       <div class="input-group-prepend">
-        <span class="input-group-text">Location</span>
+        <span class="input-group-text"><i class="fas fa-map-marker-alt mr-2"></i>Location</span>
       </div>
       
       <select onchange="print_city('state', this.selectedIndex);" id="sts" name ="state_name" class="form-control" required></select>
@@ -173,12 +239,12 @@
 
     <div class="form-group input-group">
         <div class="input-group-prepend">
-          <span class="input-group-text">Complete Address</span>
+          <span class="input-group-text"><i class="fas fa-address-card mr-2"></i>Complete Address</span>
         </div>
         
         <textarea type="text" class="form-control" style="height: 80px;" minlength="20" placeholder="Enter Address" id="Location" name="Location" required /></textarea>
     </div>
-
+    
     <div id="xxx" style="display: none" class="input-group form-group">
         <div class="input-group-prepend">
             <span class="input-group-text"><i class="fas fa-calendar-alt mr-2"></i> Date of Death</span>
@@ -191,9 +257,17 @@
 
     </div>
 
+    <div id="div_death_place" class="input-group form-group" style="display:none;">
+      <div class="input-group-prepend">
+          <span class="input-group-text"><i class="fas fa-map-marker-alt mr-2"></i>Death Place</span>
+      </div>
+      
+      <input type="text" class="form-control" id="deathplace" name="deathplace" required >
+    </div>
+
     <div class="form-group input-group ">
         <div class="input-group-prepend">
-          <span class="input-group-text">Document Required</span>
+          <span class="input-group-text"><i class="fas fa-file-alt mr-2"></i>Document Required</span>
         </div>
         
         <select class="form-control" id="DocName" name="DocName" required>
@@ -203,7 +277,7 @@
      
       <div class="input-group form-group">
         <div class="input-group-prepend">
-            <span class="input-group-text"><i class="fas fa-file-alt mr-2"></i>Upload document</span>
+            <span class="input-group-text"><i class="fas fa-file-upload mr-2"></i>Upload document</span>
         </div>
   
             <input type="file" onchange="check()" class="btn btn-light" id="doc_proof" accept=".doc,.docx,.pdf" name="doc_proof" required>
@@ -215,7 +289,7 @@
 </div>
 	 
   <div class="card-footer text-muted">
-    
+
         <input type="submit" class="btn btn-primary float-right"  name="Submit" value="Apply Now">
   </div>
 
