@@ -6,10 +6,8 @@
 
 
 	.campus-col{
-	  
-	  
-	  width: 250px;
-	  height: 200px;
+	  width: 207.4px;
+	  height: 190px;
 	  position: relative;
 	  overflow: hidden;
 	  transition: 0.5s;
@@ -18,6 +16,7 @@
 	.campus-col img{
 	  width: 100%;
 	  height: 100%;
+	  object-fit: fill;
 	  display: block;
 	  transition: 0.5s;
 	 
@@ -25,24 +24,28 @@
 	.campus-col:hover img{
 		transform: scale(1.2);
 	}
+	.campus-col:hover{
+		border: solid 0.5px;
+	}
   
 	.layer h6{
 	  text-decoration: none;
 	  color: white;
 	  width: 100%;
-	  font-size: 20px;
-	  top:0;
+	  font-size: 25px;
+	  text-align: center;
+	  top:-25%;
 	  left: 50%;
 	  transform: translateX(-50%);
 	  position: absolute;
 	  opacity: 0;
-	  transition: 0.5s;
+	  transition: 0.3s;
 
 	}
   
 	.layer:hover h6{
 
-	  top: 1%;
+	  top: 0;
 	  text-align: center;
 	  opacity: 1;
 	  background: rgba(27, 27, 27, 0.6);
@@ -68,15 +71,6 @@
 
 <style type="text/css">
 
-	.div1{
-		opacity: 0.9;
-	}
-	.div1:hover{
-		opacity: 1.0;
-		border:1px solid grey;
-		
-		
-	}
 
 	.d-block{
 		height: 320px;	
@@ -140,54 +134,126 @@
 
 <div class="col-md-9 mb-4">
 
+	<div class="row ml-4 mt-5 rounded-top border border-light list-group-item-secondary">
+		
+				<div class="col-lg-12 textEffect text-center">
+					<h3 class="secondary p-2"><b>MoPR Compain/Applications Link</b></h3>
+				</div>
+							  
+			  
+				  <div class="campus-col">
+						  <a href="https://meetingonline.gov.in/" target="_blank"></a>
+						  <img class="img-fluid mx-auto d-block" src="https://egramswaraj.gov.in/resources/home/images/vibrant-sabha.jpg" alt="">
+						  <div class="layer">
+							 <h6>Vibrant Gram Sabha</h6>
+						  </div>
+					  </div>
+			  
+			  
+			  
+				  <div class="campus-col">
+						  <a href="https://indiaat75.nic.in/" target="_blank"></a>
+						  <img class="img-fluid mx-auto d-block" src="https://egramswaraj.gov.in/resources/home/images/india-75.jpg" alt="">
+						  <div class="layer">
+							 <h6>India@75</h6>
+						  </div>
+					  </div>
+			  
+			  
+			  
+				  <div class="campus-col">
+						  <a href="https://egramswaraj.gov.in/covidDashboard.do" target="_blank"></a>
+						  <img class="img-fluid mx-auto d-block" src="https://egramswaraj.gov.in/resources/home/images/covid-dashboard.jpg" alt="">
+						  <div class="layer">
+							 <h6>Covid Dashboard</h6>
+						  </div>
+					  </div>
+			  
+			  
+				  <div class="campus-col">
+						  <a href="https://panchayatcharter.nic.in/#/" target="_blank"></a>
+						  <img class="img-fluid mx-auto d-block" src="https://egramswaraj.gov.in/resources/home/images/citizen-charter.jpg" alt="">
+						  <div class="layer">
+							 <h6>Citizen Charter</h6>
+						  </div>
+					  </div>
+			  
+			  
+				  <div class="campus-col">
+					  <a href="https://egramswaraj.gov.in/urjaDashboard.do" target="_blank">
+					  <img class="img-fluid mx-auto d-block" title="Gram Urja Swaraj" src="https://egramswaraj.gov.in/resources/home/images/GramUrjaSwara-logo.jpg" alt="Gram Urja Swaraj">
+					  <div class="layer">
+						  <h6>Gram Urja Swaraj</h6>
+					  </div>
+				  </div>
+			  
 
-
-{% for post in posts %}
-	<div class="container"   >
-
-		<div class=" container" >
-			<article style="height: 200px;" class="div1 rounded media content-section ml-2 shadow mb-3 mt-2 pt-2">
-				<img class=" mr-2 ml-2" src="{{ post.Creator.emprofile.img.url }}" width="50px" height="50px">
-				
-				<div class="mb-2">
-					<div class="border-bottom">
-						<a href="{% url 'user-posts' post.Creator.username %}" >{{ post.Creator.emprofile.CompanyName }}</a>
-						<a class="text-dark" style="text-decoration: None;" href="{% url 'post-detail' post.id %}">
-							<small class="text-muted">Posted Job on {{ post.DatePosted }}</small>
-					</div>
-					
-					<h6 class="pt-1 text">{{ post.Designation }}</h6>
-					<p><i class="fa fa-briefcase mr-2"></i>{{ post.Experience }}</p>
-					<p><i class="fa fa-map-marker-alt mr-2"></i>{{ post.Location }}</p>
-					<p><i class="fa fa-pencil-ruler mr-1"></i>{{ post.SkillsRequired }}</p>
+				<div class="campus-col">
+					<a href="https://gpdp.nic.in/" target="_blank">
+						<img class="img-fluid mx-auto d-block" alt="" src="https://egramswaraj.gov.in/resources/home/images/gpdp-logo.jpg">
+						<div class="layer"> 
+							<h6>GPDP</h6>
+						</div>
 					</a>
-				</div>	
+				</div>
 
-			</article>
-		</div>
-
+				
+					<div class="campus-col">
+						<a href="https://serviceonline.gov.in/" target="_blank"></a>
+				        <img class="img-fluid mx-auto d-block" title="Service Plus" src="https://egramswaraj.gov.in/resources/home/images/serviceplus-logo.png" alt="Service Plus">
+				        <div class="layer">
+				           <h6>Service Plus</h6>
+				        </div>
+				    </div>
+				
+				
+					<div class="campus-col">
+							<a href="https://auditonline.gov.in/" target="_blank"></a>
+					        <img class="img-fluid mx-auto d-block" src="https://egramswaraj.gov.in/resources/home/images/auditonline.jpg" alt="">
+					        <div class="layer">
+					           <h6>Audit Online</h6>
+					        </div>
+					    </div>
+				
+				
+					<div class="campus-col">
+							<a href="https://trainingonline.gov.in/" target="_blank"></a>
+					        <img class="img-fluid mx-auto d-block" src="https://egramswaraj.gov.in/resources/home/images/trainingonline.jpg" alt="">
+					        <div class="layer">
+					           <h6>Training Management</h6>
+					        </div>
+					    </div>
+				
+				
+				
+					<div class="campus-col">
+							<a href="https://rgsa.gov.in/" target="_blank"></a>
+					        <img class="img-fluid mx-auto d-block" src="https://egramswaraj.gov.in/resources/home/images/rgsa-logo.jpg" alt="">
+					        <div class="layer">
+					           <h6>RGSA</h6>
+					        </div>
+					    </div>
+				
+				
+				
+					<div class="campus-col">
+							<a href="https://lgdirectory.gov.in/" target="_blank"></a>
+					        <img class="img-fluid mx-auto d-block" src="https://egramswaraj.gov.in/resources/home/images/lgd-logo.jpg" alt="">
+					        <div class="layer">
+					           <h6>LGD</h6>
+					        </div>
+					    </div>
+				
+				
+					<div class="campus-col">
+							<a href="http://panchayataward.gov.in/" target="_blank"></a>
+					        <img class="img-fluid mx-auto d-block" src="https://egramswaraj.gov.in/resources/home/images/panchayat-award.jpg" alt="">
+					        <div class="layer">
+					           <h6>Panchayat Awards</h6>
+					        </div>
+					    </div>
+				
 	</div>
-
-{% empty %}
-
-<div class="row mt-5 ml-3">
-	<div class="campus-col bg-dark text-white" style="text-align: center;">
-		<h5>
-			MoPR Campain
-		</h5>	
-	</div>
-	<div class="campus-col">
-		<a href="https://gpdp.nic.in/">
-		  <img class="p-4 bg-light" alt="" src="https://egramswaraj.gov.in/resources/home/images/gpdp-logo.jpg">
-		  <div class="layer"> 
-			  <h6>GPDP</h6>
-		  </div>
-		</a>
-	  </div>
-
-</div>
-
-{% endfor %}
 
 {% if is_paginated %}
 <div class="ml-5 mt-5 card-body">

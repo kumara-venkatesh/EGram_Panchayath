@@ -65,9 +65,7 @@ def Register(request):
                                                    address=address, Department='public')
             userprofile.save()
             #send_mail('Registratoin', 'Thank you for registering to Job portal(Trial) Version', settings.EMAIL_HOST_USER, [email], fail_silently=False, )
-            messages.DEBUG(request,
-                             'Account created successfully for "{}" Please login and complete your profile'.format(
-                                 email))
+            messages.warning(request,'Account created successfully for {mail} Please login and complete your profile'.format(mail=email))
             return redirect('Login')
     return render(request, 'Users/Register.html')
 

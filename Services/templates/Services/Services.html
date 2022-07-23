@@ -161,7 +161,7 @@
 
     <div class="form-group input-group ">
       <div class="input-group-prepend">
-        <span class="input-group-text">Document Required</span>
+        <span class="input-group-text"><i class="fas fa-file-alt mr-2"></i>Document Required</span>
       </div>
       
       <select class="form-control" id="DocName" name="DocName" required>
@@ -172,7 +172,7 @@
 
     <div class="input-group form-group">
         <div class="input-group-prepend">
-            <span class="input-group-text"><i class="fas fa-file-alt mr-2"></i>Upload document</span>
+            <span class="input-group-text"><i class="fas fa-file-upload mr-2"></i>Upload document</span>
         </div>
 
             <input type="file" onchange="check_file()" class="btn btn-light" id="file" accept=".doc,.docx,.pdf" name="file" required>
@@ -180,7 +180,7 @@
 
     <div class="form-group input-group ">
       <div class="input-group-prepend">
-        <span class="input-group-text">Location</span>
+        <span class="input-group-text"><i class="fas fa-map-marker-alt mr-2"></i>Location</span>
       </div>
       
       <select onchange="print_city('state', this.selectedIndex);" id="sts" name ="state_name" class="form-control" required></select>
@@ -192,7 +192,7 @@
 
     <div class="form-group input-group">
         <div class="input-group-prepend">
-          <span class="input-group-text">Complete Address</span>
+          <span class="input-group-text"><i class="fas fa-address-card mr-2"></i>Complete Address</span>
         </div>
         
         <textarea type="text" class="form-control" style="height: 80px;" minlength="20" placeholder="Enter Address" id="Location" name="Location" required /></textarea>
