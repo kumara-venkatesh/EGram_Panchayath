@@ -6,8 +6,9 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 from .models import Services, Certificates
 from django.contrib import messages
 import datetime
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import redirect
+import csv, xlwt
 
 
 # Create your views here.
@@ -253,6 +254,32 @@ class ReceivedRequests(ListView):
 
         return req
 
+class Cert_ReceivedRequests(ListView):
+    model = Services
+    template_name = "Services/CertificatesRequestsReceived.html"
+    context_object_name = 'requests'
+    paginate_by = 5
+    
+    def get_queryset(self):
+        req = Certificates.objects.all()
+
+        def ExecQuery(req, Cert):
+            key = list(Cert.keys())[0]
+            if key=='Cert_Approval_Status':
+                req = req.filter(Approval_Status=Cert[key]).order_by('-Cert_Applied_Date')
+            if key=='Cert_Completion_Status':
+                req = req.filter(Completion_Status=Cert[key]).order_by('-Cert_Applied_Date')
+            return req
+
+        if self.request.GET.get('idAppStatus'):
+            req = ExecQuery(req, {'Cert_Approval_Status':self.request.GET.get('idAppStatus')})
+        
+        if self.request.GET.get('idCompStatus'):
+            req = ExecQuery(req, {'Cert_Completion_Status':self.request.GET.get('idCompStatus')})
+
+        return req
+
+
 class ProcessRequest(DetailView):
     model = Services
     template_name_suffix = '_process_request_details'
@@ -262,10 +289,10 @@ class ProcessRequest(DetailView):
         if value:
             current_process = Services.objects.get(id=obj_id)
             current_process.Serv_Approval_Status = value
-            current_process.Serv_Remarks = request.POST.get('serv_remarks')
+            current_process.Serv_Remarks += request.POST.get('serv_remarks')
             if value == 'approved':
                 current_process.Serv_Completion_Status = 'pending'
-                messages.warning(request,"Request is rejected")
+                messages.warning(request,"Request is Approved")
             if value == 'rejected':
                 current_process.Serv_Completion_Status = 'rejected'
                 messages.warning(request,"Request is rejected")
@@ -277,7 +304,59 @@ class ProcessRequest(DetailView):
         context = super().get_context_data(**kwargs)
         
         return context
-    
+
+class ProcessCertRequest(DetailView):
+    model = Certificates
+    template_name_suffix = '_process_cert_request_details'
+    def post(self, request, **kwargs):
+        obj_id = request.POST.get('Object_id')
+        value = request.POST.get('Approval_Submit')
+        if value:
+            current_process = Certificates.objects.get(id=obj_id)
+            current_process.Approval_Status = value
+            current_process.Remarks += request.POST.get('cert_remarks')
+            if value == 'approved':
+                current_process.Completion_Status = 'pending'
+                messages.warning(request,"Request is Approved")
+            if value == 'rejected':
+                current_process.Completion_Status = 'rejected'
+                messages.warning(request,"Request is rejected")
+            current_process.save()
+            
+        return redirect('ProcessCertRequestURL',pk=obj_id)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        
+        return context
 
 def About(request):
     return render(request, 'Services/about_us.html')
+
+def export_service_requets_csv(request):
+    respone = HttpResponse(content_type='text/csv')
+    respone['Content-Disposition']='attachment; filename=Requests'+str(datetime.datetime.now())+'.csv'
+    writer = csv.writer(respone)
+    writer.writerow(['Request Type','Applied By','Applied For','Applied Date','Approval Status','Complete Status'])
+
+    services = Services.objects.all()
+    for element in services:
+        writer.writerow([element.Serv_Type,element.Serv_Applied_By,element.Serv_Name,element.Serv_Applied_Date,element.Serv_Approval_Status,element.Serv_Completion_Status])
+
+    return respone
+
+def export_certificate_requets_csv(request):
+    respone = HttpResponse(content_type='text/csv')
+    respone['Content-Disposition']='attachment; filename=Requests'+str(datetime.datetime.now())+'.csv'
+    writer = csv.writer(respone)
+    writer.writerow(['Applied For','Applied By','Candidate Name','Applied Date','Approval Status','Complete Status'])
+
+    certs = Certificates.objects.all()
+    for element in certs:
+        writer.writerow([element.Cert_Name,element.Cert_Requested_By,element.Cand_Name,element.Cert_Applied_Date,element.Approval_Status,element.Completion_Status])
+
+    return respone
+
+def view_certificate(request):
+    context = {'certicate_name':'','name':'','body':'',}
+    return render(request, 'Services/Certificate_template.html', context=context)

@@ -21,7 +21,6 @@
                         <div class="dropdown-menu">  
                             <button type="submit" name="idServType" id="idServType" value="Service" class="dropdown-item">Service</button>
                             <button type="submit" name="idServType" id="idServType" value="Complaint" class="dropdown-item">Complaint</button>
-                            <button type="submit" name="idServType" id="idServType" value="Certificate" class="dropdown-item">Certificate</button>
                             <button type="submit" name="idServType" id="idServType" value="" class="dropdown-item">All</button>
                         </div>
                       </div>
@@ -82,6 +81,8 @@
                 <td class="bg-warning">{{ request.Serv_Completion_Status }}</td>
             {% elif request.Serv_Completion_Status == 'completed' %}
                 <td class="bg-success">{{ request.Serv_Completion_Status }}</td>
+            {% elif request.Serv_Completion_Status == 'rejected' %}
+                <td class="bg-danger">{{ request.Serv_Completion_Status }}</td>
             {% else %}
                 <td class="">{{ request.Serv_Completion_Status }}</td>
             {% endif %}
@@ -107,13 +108,9 @@
         </tbody>
         </table>
     </form>
-    <button class="btn btn-success float-right mt-2" onclick="exportData()">
-        <span class="fas fa-download"></span>
-        Download Table Data
-    </button><br><br>
-    <p class="float-right text-dark rounded border ">
-        (In Excel/Json format)
-    </p>
+
+    <a href="{% url 'export-service-requets-csv' %}" class="btn btn-success float-right mt-2"><span class="fas fa-download mr-2"></span>Export to CSV</a>
+
         
         {% if is_paginated %}
         <div class="ml-5 mt-5 card-body">

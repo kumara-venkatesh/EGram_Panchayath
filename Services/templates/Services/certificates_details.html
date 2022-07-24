@@ -268,15 +268,6 @@
             
         </div>
         <div class="card-footer">
-            {% if user.profile.Department == 'public' %}
-                {% if object.Cert_Requested_By == user and object.Approval_Status == 'pending'%}
-                    <a class="btn btn-outline-danger mr-4" href="#"><img src="/media/delete.png" width="30" height="30">Delete Request</a>
-                    <a class="btn btn-outline-secondary mr-4" href="#"><img src="/media/edit.png" width="30" height="30">Edit Request</a>
-
-                {% endif %}
-
-            {% endif %}
-
 
         </div>
 
