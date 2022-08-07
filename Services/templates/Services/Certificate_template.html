@@ -57,7 +57,13 @@
             }
         </style>
     </head>
-    <body>
+    <body onload="getCurrentDate()">
+        <script type="text/javascript">
+            function getCurrentDate() {
+                let date = new Date().toDateString();
+                document.querySelector('.output').textContent = date;
+            }
+        </script>
         
         <div class="container">
             
@@ -81,28 +87,25 @@
             </div>
 
             <div class="reason">
-                For deftly defying the laws of gravity<br/>
-                and flying high
+                {{body}}
             </div>
             <br><br><br><br>
             
             <hr>
             <div class="row">
-                <div class="col-sm-6">
-                    <span class="bold block">Indian Governmet, Council</span>
-        
-                        <div class="col-xs-4">
-                            <!-- LEAVE EMPTY -->
-                        </div>
-                        
+                
+                <div class="col-sm-4">
+                    <label style="left:0;">Date: <span class="output"></span> </label>                        
                 </div>
-                <img src="https://e7.pngegg.com/pngimages/923/614/png-clipart-digital-signature-signature-block-signatures-angle-material.png">
+                <div class="col-sm-2">
+                                          
+                </div>
                 <div class="col-sm-6">
                     <div class="col-xs-4 pm-certified col-xs-4 text-center">
-                        <span class="text-muted" style="font-size: 15px;">Date Completed</span>
+                        <img style="width: 100px;" src="https://www.freepnglogos.com/uploads/signature-png/signature-cair-oklahoma-voter-guide-cair-oklahoma-4.png"><br>
                         <span class="pm-empty-space block underline"></span>
-                        <span class="bold block">DOB: </span>
-                        <span class="bold block">Social Security # (last 4 digits)</span>
+                        <span class="bold block">Indian Governmet, Council</span>
+                        <span class="bold block">Administrator Signature</span>
                     </div>
 
                 </div>

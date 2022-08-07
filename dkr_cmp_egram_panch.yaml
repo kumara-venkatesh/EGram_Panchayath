@@ -1,0 +1,16 @@
+version: '3'
+services:
+  dkr_cont_egram_panch:
+    image: dkr_egram_panch:1.0
+    ports:
+      - 8000:8000
+    volumes:
+      - egram_panch_vol:/home/app/webapp
+
+volumes:
+  egram_panch_vol:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: .
