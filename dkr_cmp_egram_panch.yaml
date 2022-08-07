@@ -13,4 +13,4 @@ volumes:
     driver_opts:
       type: none
       o: bind
-      device: .
+      device: 'C:\Ignou_MCA\FinalYearProject\Django_Projects\EGram_Panchayath\EGram_Panchayath'
