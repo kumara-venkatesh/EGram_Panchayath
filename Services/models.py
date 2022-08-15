@@ -52,4 +52,4 @@ class Certificates(models.Model):
     Cert_Estimated_Completion_Date = models.DateField(default=None, null=True, blank=True)
 
     def __str__(self) -> str:
-        return super().__str__()
+        return self.Cert_Name

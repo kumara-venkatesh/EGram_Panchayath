@@ -288,12 +288,13 @@ class ProcessRequest(DetailView):
         value = request.POST.get('Approval_Submit')
         if value:
             current_process = Services.objects.get(id=obj_id)
-            current_process.Serv_Approval_Status = value
             current_process.Serv_Remarks += request.POST.get('serv_remarks')
-            if value == 'approved':
+            if value == 'Approve':
+                current_process.Serv_Approval_Status = "approved"
                 current_process.Serv_Completion_Status = 'pending'
                 messages.warning(request,"Request is Approved")
-            if value == 'rejected':
+            if value == 'Reject':
+                current_process.Serv_Approval_Status = "rejected"
                 current_process.Serv_Completion_Status = 'rejected'
                 messages.warning(request,"Request is rejected")
             current_process.save()
@@ -311,17 +312,24 @@ class ProcessCertRequest(DetailView):
     def post(self, request, **kwargs):
         obj_id = request.POST.get('Object_id')
         value = request.POST.get('Approval_Submit')
+        completion_value = request.POST.get('Completion_Submit')
         if value:
             current_process = Certificates.objects.get(id=obj_id)
-            current_process.Approval_Status = value
             current_process.Remarks += request.POST.get('cert_remarks')
-            if value == 'approved':
+            if value == 'Approve':
+                current_process.Approval_Status = 'approved'
                 current_process.Completion_Status = 'pending'
                 messages.warning(request,"Request is Approved")
-            if value == 'rejected':
+            if value == 'Reject':
+                current_process.Approval_Status = 'rejected'
                 current_process.Completion_Status = 'rejected'
                 messages.warning(request,"Request is rejected")
             current_process.save()
+        if completion_value:
+            current_process = Certificates.objects.get(id=obj_id)
+            current_process.Remarks += request.POST.get('Comp_Remarks')
+            current_process.Completion_Status = ''
+
             
         return redirect('ProcessCertRequestURL',pk=obj_id)
 

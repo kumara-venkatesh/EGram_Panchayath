@@ -179,8 +179,8 @@
                                 {% if object.Serv_Approval_Status == 'pending' %}
                                     <h6>Please Accept/Reject the below request with the valid remarks</h6>
                                     <input class="form-control" type="text" name="serv_remarks" placeholder="Remarks" required><br>
-                                    <input type="submit" class="btn btn-success" value="approved" name="Approval_Submit">
-                                    <input type="submit" class="btn btn-danger ml-4" value="rejected" name="Approval_Submit">
+                                    <input type="submit" class="btn btn-success" value="Approve" name="Approval_Submit">
+                                    <input type="submit" class="btn btn-danger ml-4" value="Reject" name="Approval_Submit">
                                 {% else %}
                                 <h5 style="text-transform:uppercase;" class="p-3 bg-light">{{ object.Serv_Approval_Status }}</h5>
                                 {% endif %}

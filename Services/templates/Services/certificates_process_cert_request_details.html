@@ -258,8 +258,8 @@
                                 {% if object.Approval_Status == 'pending' %}
                                     <h6>Please Accept/Reject the below request with the valid remarks</h6>
                                     <input class="form-control" type="text" name="cert_remarks" placeholder="Remarks" required><br>
-                                    <input type="submit" class="btn btn-success" value="approved" name="Approval_Submit">
-                                    <input type="submit" class="btn btn-danger ml-4" value="rejected" name="Approval_Submit">
+                                    <input type="submit" class="btn btn-success" value="Approve" name="Approval_Submit">
+                                    <input type="submit" class="btn btn-danger ml-4" value="Reject" name="Approval_Submit">
                                 {% else %}
                                 <h5 style="text-transform:uppercase;" class="p-3 bg-light">{{ object.Approval_Status }}</h5>
                                 {% endif %}
@@ -274,11 +274,10 @@
                             
                                 <h6>Certificate Completion form:</h6>
                                 {% if object.Completion_Status == 'pending'%}
-                                    
                                     <div class="p-2 text-muted">
-                                        <input class="form-control" type="text" placeholder="Remarks" required><br>
-                
-                                        <input type="submit" class="btn btn-primary"  name="Completion_Submit" value="Submit">
+                                        <input class="form-control" type="text" name="Comp_Remarks" placeholder="Remarks" required><br>
+                                        <p class="bg-warning rounded p-1 text-white">Click below Submit button to generate certificate for the current request</p>
+                                        <input type="submit" class="btn btn-primary"  name="Completion_Submit" value="Submit">                                        
                                     </div>
                                 {% else %}
                                 <h5 style="text-transform:uppercase;" class="p-3 bg-light">{{ object.Completion_Status }}</h5>
@@ -286,7 +285,7 @@
                                 
                                 
                             </div>
-                            </form>
+                        </form>
                             
                         
                     </div>
