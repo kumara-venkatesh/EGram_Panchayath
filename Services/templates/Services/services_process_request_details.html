@@ -2,6 +2,28 @@
 {% load crispy_forms_tags %}
 {% block content %}
 
+<script type="text/javascript">
+    function check_file()
+	{
+		var size = document.getElementById('CImage').files[0].size;
+		var doc = document.getElementById('CImage')
+		var ext = doc.value.split('.').pop();
+
+		if($.inArray(ext, ["jpeg","jpg",'png']) == -1)
+		{
+			alert("Only JPEG,JPG,PNG files are allowed");
+			doc.value = "";
+		}
+
+		else if(size > 2097152)
+		{
+			alert("Uploaded file size is more than 2MB, kindly upload the file lesser than 2MB");
+			doc.value = "";
+		}
+		
+	}
+
+</script>
 
 <style>
     .pgval{
@@ -192,7 +214,7 @@
                             {% csrf_token %}
                             <div class=" mt-3 border p-3 rounded shadow">
 
-                            
+                                <input type="hidden" name="Object_id" value="{{object.id}}">
                                 <h6>Service Completion form:</h6>
                                 {% if object.Serv_Completion_Status == 'pending'%}
                                     <div class="input-group form-group">
@@ -200,12 +222,12 @@
                                             <span class="input-group-text"><i class="fas fa-file-alt mr-2"></i>Snapshot of Work Completed</span>
                                         </div>
                                         
-                                        <input type="file" onchange="check_file(this)" class="btn btn-light" id="CImage" accept=".jpg,.jpeg,.png" name="CImage" required>  
+                                        <input type="file" onchange="check_file()" class="btn btn-light" id="CImage" accept=".jpg,.jpeg,.png" name="CImage" required>  
                                         
                                     </div>
                                     
                                     <div class="p-2 text-muted">
-                                        <input class="form-control" type="text" placeholder="Remarks" required><br>
+                                        <input class="form-control" type="text" name="Completion_remarks" placeholder="Remarks" required><br>
                 
                                         <input type="submit" class="btn btn-primary"  name="Completion_Submit" value="Submit">
                                     </div>

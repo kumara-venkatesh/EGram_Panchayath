@@ -285,10 +285,12 @@ class ProcessRequest(DetailView):
     template_name_suffix = '_process_request_details'
     def post(self, request, **kwargs):
         obj_id = request.POST.get('Object_id')
+        
+        #Approve/Reject Service/Complaint Requests
         value = request.POST.get('Approval_Submit')
         if value:
             current_process = Services.objects.get(id=obj_id)
-            current_process.Serv_Remarks += request.POST.get('serv_remarks')
+            current_process.Serv_Remarks = request.POST.get('serv_remarks')
             if value == 'Approve':
                 current_process.Serv_Approval_Status = "approved"
                 current_process.Serv_Completion_Status = 'pending'
@@ -298,7 +300,24 @@ class ProcessRequest(DetailView):
                 current_process.Serv_Completion_Status = 'rejected'
                 messages.warning(request,"Request is rejected")
             current_process.save()
-            
+        submit_complete = request.POST.get('Completion_Submit')
+        
+        #Complete Service/Complaint Requests
+        if submit_complete:
+            current_process = Services.objects.get(id=obj_id)
+            current_process.Serv_Remarks = request.POST.get('Completion_remarks')
+
+            #Read Service Completion Image and store
+            if request.FILES.__contains__('CImage'):
+                CImage = request.FILES['CImage']
+                fs = FileSystemStorage()
+                fs.save(CImage.name, CImage)
+            current_process.Serv_Comp_Image=CImage
+            current_process.Serv_Completion_Status = 'completed'
+            current_process.save()
+
+            messages.warning(request,"Request Status is updated as Completed") 
+        
         return redirect('ProcessRequestURL',pk=obj_id)
 
     def get_context_data(self, **kwargs):
@@ -315,7 +334,7 @@ class ProcessCertRequest(DetailView):
         completion_value = request.POST.get('Completion_Submit')
         if value:
             current_process = Certificates.objects.get(id=obj_id)
-            current_process.Remarks += request.POST.get('cert_remarks')
+            current_process.Remarks = request.POST.get('cert_remarks')
             if value == 'Approve':
                 current_process.Approval_Status = 'approved'
                 current_process.Completion_Status = 'pending'
@@ -326,9 +345,10 @@ class ProcessCertRequest(DetailView):
                 messages.warning(request,"Request is rejected")
             current_process.save()
         if completion_value:
-            current_process = Certificates.objects.get(id=obj_id)
+            messages.warning(request,obj_id)
+            """current_process = Certificates.objects.get(id=obj_id)
             current_process.Remarks += request.POST.get('Comp_Remarks')
-            current_process.Completion_Status = ''
+            current_process.Completion_Status = 'Completed'"""
 
             
         return redirect('ProcessCertRequestURL',pk=obj_id)

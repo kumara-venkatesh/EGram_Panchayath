@@ -64,6 +64,8 @@
                 <td class="bg-warning">{{ request.Completion_Status }}</td>
             {% elif request.Completion_Status == 'completed' %}
                 <td class="bg-success">{{ request.Completion_Status }}</td>
+            {% elif request.Completion_Status == 'rejected' %}
+                <td class="bg-danger">{{ request.Completion_Status }}</td>
             {% else %}
                 <td class="">{{ request.Completion_Status }}</td>
             {% endif %}
