@@ -22,5 +22,5 @@ urlpatterns = [
     path('process_cert_request/<int:pk>/', views.ProcessCertRequest.as_view(), name='ProcessCertRequestURL'), 
     path('export_service_requests',views.export_service_requets_csv,name='export-service-requets-csv'),
     path('export_certificate_requests',views.export_certificate_requets_csv,name='export-certificate-requets-csv'),
-    path('view_certificate/', views.view_certificate, name='view-certificate'), 
+    path('view_certificate/<int:pk>', views.view_certificate.as_view(), name='view-certificate'), 
 ]

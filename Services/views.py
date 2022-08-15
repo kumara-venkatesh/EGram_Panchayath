@@ -332,6 +332,8 @@ class ProcessCertRequest(DetailView):
         obj_id = request.POST.get('Object_id')
         value = request.POST.get('Approval_Submit')
         completion_value = request.POST.get('Completion_Submit')
+        
+        #Approve/Reject Certificate Requests
         if value:
             current_process = Certificates.objects.get(id=obj_id)
             current_process.Remarks = request.POST.get('cert_remarks')
@@ -344,11 +346,15 @@ class ProcessCertRequest(DetailView):
                 current_process.Completion_Status = 'rejected'
                 messages.warning(request,"Request is rejected")
             current_process.save()
+        
+        #Generate Certificate and Complete Certificate Request
         if completion_value:
-            messages.warning(request,obj_id)
-            """current_process = Certificates.objects.get(id=obj_id)
-            current_process.Remarks += request.POST.get('Comp_Remarks')
-            current_process.Completion_Status = 'Completed'"""
+            #Send Current Certificate Request to Generate Certificate
+            current_process = Certificates.objects.get(id=obj_id)
+            current_process.Remarks = request.POST.get('Comp_Remarks')
+            current_process.Completion_Status = 'completed'
+            current_process.save()
+            messages.warning(request,"Certificate Generated Successfully")
 
             
         return redirect('ProcessCertRequestURL',pk=obj_id)
@@ -385,6 +391,10 @@ def export_certificate_requets_csv(request):
 
     return respone
 
-def view_certificate(request):
-    context = {'certicate_name':'','name':'','body':'',}
-    return render(request, 'Services/Certificate_template.html', context=context)
+class view_certificate(DetailView):
+    model = Certificates
+    template_name_suffix = '_template_details'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        return context

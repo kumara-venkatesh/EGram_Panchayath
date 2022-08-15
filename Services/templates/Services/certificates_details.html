@@ -252,17 +252,15 @@
                             </p>
                         
                     </div>
+                    {% if object.Completion_Status == 'completed' %}
+                    <div class="rounded border p-3 mb-1">
+                        <h5>Certificate</h5>
+                            <a href="{% url 'view-certificate' object.id %}" target="_blank" class="btn btn-outline-success"><b><i class="fas fa-file-alt mr-1 fa-5x"></i><br>{{object.Cert_Name}}<hr class="bg-white">View/Open Certificate</b></a>
+                    </div>
+                    {% endif %} 
                     
                 </div>
 
-            </div>
-
-            <div class="rounded border p-3">
-                <h6>Certificate</h6>
-                {% if object.certificate.url != none %}
-                <img class="rounded" src="{{ object.certificate.url }}" width="300px" height="300px">
-                {% endif %}
-                
             </div>
 
             
